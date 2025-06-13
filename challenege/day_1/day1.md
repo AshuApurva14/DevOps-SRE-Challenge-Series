@@ -1,0 +1,2 @@
+## Day_1
+- In this challenge, you will first create a bash script that creates one hundred files, and then create a Bash script that creates an arbitrary number of files using an argument that you supply.
