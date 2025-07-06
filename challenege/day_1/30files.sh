@@ -5,7 +5,7 @@
 no_of_dir_to_create=$1
 path_to_create="/workspaces/My-DevOps-SRE-Daily-Challenge/challenege"
 
-for dir in $(seq 2 $no_of_dir_to_create)
+for dir in $(seq 3 $no_of_dir_to_create)
 do
     dir_name=day_$dir
     dir_path="$path_to_create/$dir_name"
