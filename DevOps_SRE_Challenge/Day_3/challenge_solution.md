@@ -91,6 +91,11 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
 
   3. you can rebase the last 3 commits using `git rebase -i HEAD~3`, where 3 is the number of commits.
   
+  ![after rebase](Day3_4.png)
+
+
+  
+
 
   
    
