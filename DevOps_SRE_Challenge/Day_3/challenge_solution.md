@@ -30,3 +30,14 @@ git commit --amend -m "update: add few more changes to solution file"
 
 So, this is how you can utilise the `git commit ---amend` command to fix **typos in the commit message** and **Add missed changes.**
 
+![Screenshot_1](Day_3_1.png)
+
+![Screensho_2](Day_3_4.png)
+
+![Screenshot_3](Day_3_3.png)    
+
+
+
+#-----------#-----------------#-----------------#----------------------#------------#---------------#--------------#
+
+
