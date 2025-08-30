@@ -46,3 +46,7 @@
      - A small team working on a web application with continuous deployment.
 
      - A large team working on an enterprise software product with monthly releases. Explain your reasoning.
+
+
+*These challenges are totally based on praticals only.*
+
