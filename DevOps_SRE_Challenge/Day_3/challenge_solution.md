@@ -94,6 +94,9 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
   ![after rebase](Day3_4.png)
 
 
+ - Squash last 2 commits and reword a message
+
+   
   
 
 
