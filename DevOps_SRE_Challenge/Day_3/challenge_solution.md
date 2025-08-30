@@ -89,7 +89,8 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
 
   2. Be on the branch (Typically feature) where you will rebase the master/main branch.
 
-  3. 
+  3. you can rebase the last 3 commits using `git rebase -i HEAD~3`, where 3 is the number of commits.
+  
 
   
    
