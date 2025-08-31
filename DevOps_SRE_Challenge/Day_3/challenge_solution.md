@@ -219,8 +219,9 @@ shows:
 
 🔹 2. Git Cherry-Pick
 
-👉 Analogy:
-Imagine you baked a cake with 5 layers (commits), but your friend only wants the 3rd layer. Instead of giving the whole cake, you pick that specific layer and place it into another cake.
+👉 *Analogy:*
+
+ Imagine you baked a cake with 5 layers (commits), but your friend only wants the 3rd layer. Instead of giving the whole cake, you pick that specific layer and place it into another cake.
 
 That’s what git cherry-pick does — it copies a specific commit from one branch and applies it to another branch.
 
