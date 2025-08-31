@@ -245,6 +245,8 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
 
  - Now main has that commit, without merging the other ones.
 
+   ![cherry-pick](Day_3_15.png)
+
 📝 **Cherry-Pick Cheatsheet**
 
 `git cherry-pick <commit-hash>` → pick one commit
@@ -260,6 +262,8 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
 ## Task 6: Rebase a Feature Branch
 
 
+  - Rebase onto main, resolve conflicts, and push.
 
+  
 
 
