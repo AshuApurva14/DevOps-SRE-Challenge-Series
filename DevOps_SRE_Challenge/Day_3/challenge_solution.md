@@ -267,7 +267,89 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
    1. Chekcout into feature branch and run `git rebase main`
 
      ![after rebase](Day_3_16.png)
-
+----
   
+## Task 7: Undo with Revert
+   
+  - Revert a commit and verify the new undo commit.
 
+   🔹 What does git revert do?
+
+  **Analogy:**
+    
+     If you wrote something in your notebook and realize it’s wrong, instead of tearing the page out (which rewrites history), you write a new line that says “undo previous mistake”.
+
+    So git revert doesn’t delete the old commit — it creates a new commit that undoes its changes.
+
+  🔹 Example: Undo with Revert
+   
+  1. Check commit history
+
+    `git log --oneline`
+
+
+   **Output:**
+
+    
+
+
+     Here, let’s say we want to undo commit d4e5f6 (Add debug logs).
+
+  2. Revert the commit
+
+   `git revert d4e5f6`
+
+
+   - This will create a new commit that undoes the changes from d4e5f6.
+
+   - Your editor will open with a default message:
+
+   - Revert "Add debug logs"
+ 
+   - Save & close.
+
+
+  3. Verify new “undo” commit
+
+   - Check the log again:
+
+    `git log --oneline`
+
+
+  Now you’ll see:
+
+```
+z9y8x7 Revert "Add debug logs"
+a1b2c3 Fix login bug
+d4e5f6 Add debug logs
+g7h8i9 Add login API
+
+```
+
+
+👉 Notice: d4e5f6 is still there, but z9y8x7 undoes it.
+
+4. Confirm file changes
+
+  - If you check the files:
+
+    `git show z9y8x7`
+
+
+  - You’ll see the inverse of what d4e5f6 did.
+
+
+🔹 When to use Revert vs Reset
+
+  - `Revert` → safe for shared branches (main/master), history stays intact.
+
+  - `Reset` → rewrites history, so safer for local branches only.
+
+✅ Summary of Task 7
+
+  - Run `git revert <commit-hash>`
+
+  - Confirm the new commit message “Revert …”
+
+  - Check git log → see the new undo commit.
 
