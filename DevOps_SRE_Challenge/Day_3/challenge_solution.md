@@ -96,8 +96,10 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
 
  - Squash last 2 commits and reword a message
 
+  ![squash 2 commits](Day_3_6.png)
+
    
-  
+
 
 
   
