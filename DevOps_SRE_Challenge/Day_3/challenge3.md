@@ -47,8 +47,11 @@
 
      - A large team working on an enterprise software product with monthly releases. Explain your reasoning.
 
+<<<<<<< HEAD
 ---
 
+=======
+>>>>>>> main
 
 *These challenges are totally based on praticals only.*
 
