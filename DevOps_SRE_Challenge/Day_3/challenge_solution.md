@@ -227,13 +227,7 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
 ✅ Example: Cherry-Pick
 
  - On feature-branch, you make 3 commits:
-
-    `a1b2c3 Add login API`
-
-    `d4e5f6 Add debug logs`
-
-    `g7h8i9 Fix login bug`
-
+   
 
  - Your teammate says: “I need just the bug fix (g7h8i9) in main right now!”
 
