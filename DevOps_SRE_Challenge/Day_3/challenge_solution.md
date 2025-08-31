@@ -172,17 +172,13 @@ That’s what git stash does — it temporarily shelves (stashes) your uncommitt
 
 shows:
 
-```
-modified: file1.py
-modified: file2.py
-```
-
+![before stash](Day_3_12.png)
 
 - Suddenly, you need to switch branches but don’t want to commit.
 
+`git stash push`
 
-`git stash`
-
+![after stash](Day_3_13.png)
 
 
 - This saves your modifications and cleans your working directory.
