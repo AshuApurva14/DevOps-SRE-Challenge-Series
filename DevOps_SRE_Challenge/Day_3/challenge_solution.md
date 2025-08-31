@@ -99,9 +99,14 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
   ![squash 2 commits](Day_3_6.png)
 
    
-
-
-
+ - Final history
+  ![Final History](Day_3_7.png)
   
-   
+---
+
+## Task 3: Tag a Release
+
+ - Create an annotated tag v2.0.0.
+
+   1. use command 
 
