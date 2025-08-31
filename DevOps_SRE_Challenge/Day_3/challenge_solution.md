@@ -266,7 +266,7 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
 
    1. Chekcout into feature branch and run `git rebase main`
 
-     ![after rebase](Day_3_16.png)
+  ![after rebase](Day_3_16.png)
 ----
   
 ## Task 7: Undo with Revert
