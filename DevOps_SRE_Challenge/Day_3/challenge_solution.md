@@ -261,6 +261,9 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
 
 ---
 
+## Task 6: Rebase a Feature Branch
+
+
 
 
 
