@@ -353,3 +353,230 @@ g7h8i9 Add login API
 
   - Check git log → see the new undo commit.
 
+
+---
+
+## Task 8 – Branching Strategies (gitflow, Git Hub Flow, Trunk-based)
+
+### Branching Strategies: Gitflow, GitHub Flow, and Trunk‑Based Development
+
+This guide covers the three popular branching models, when to use each, trade‑offs, and simple visuals (Mermaid) to show relationships and workflow.
+
+---
+
+## Gitflow
+
+**When it shines:** Larger products with scheduled releases, parallel work on upcoming versions, and need for structured hotfixes.
+
+**Core branches**
+
+* `master` (a.k.a. `main`): always production‑ready
+* `develop`: integration branch for next release
+* Supporting branches: `feature/*`, `release/*`, `hotfix/*`
+
+**Pros**
+
+* Clear separation of work in progress vs. release‑ready
+* Dedicated `release` branches for stabilization
+* Formal hotfix path to production
+
+**Cons**
+
+* Heavier ceremony; more merges
+* Slower feedback loops; not ideal for true continuous deployment
+
+**Typical flow**
+
+1. Branch `feature/*` from `develop` → implement → merge back to `develop`.
+2. Cut `release/*` from `develop` → stabilize → merge to both `master` and `develop`.
+3. Tag releases on `master` (e.g., `v1.3.0`).
+4. `hotfix/*` from `master` for urgent fixes → merge back to both `master` and `develop`.
+
+```mermaid
+flowchart LR
+  classDef prod fill:#222,color:#fff,stroke:#444;
+  classDef dev fill:#0a5, color:#fff, stroke:#083;
+  classDef support fill:#ddd, color:#222, stroke:#999;
+
+  M[(master)]:::prod
+  D[(develop)]:::dev
+
+  F1[feature/auth]:::support --> D
+  F2[feature/payments]:::support --> D
+
+  D --> R1[/release/1.3/]:::support
+  R1 -->|stabilize & bump version| D
+  R1 -->|release| M
+
+  M --> H1[/hotfix/1.3.1/]:::support
+  H1 --> M
+  H1 --> D
+```
+
+**Commands snapshot**
+
+```bash
+# start a feature
+git checkout -b feature/foo develop
+# finish feature
+git checkout develop && git merge --no-ff feature/foo && git branch -d feature/foo
+# create a release
+git checkout -b release/1.3 develop
+# finish a release
+git checkout master && git merge --no-ff release/1.3 && git tag v1.3.0
+git checkout develop && git merge --no-ff release/1.3 && git branch -d release/1.3
+# hotfix
+git checkout -b hotfix/1.3.1 master
+```
+
+---
+
+### GitHub Flow
+
+**When it shines:** Small/medium web apps with frequent deploys, simple workflow, cloud CI/CD.
+
+**Core idea**
+
+* Single long‑lived branch: `main` is always deployable
+* Short‑lived `feature/*` branches + Pull Requests
+* Continuous integration on every PR; deploy from `main`
+
+**Pros**
+
+* Minimal ceremony; fast
+* Perfect for continuous delivery/deployment
+* Fewer long‑lived branches to manage
+
+**Cons**
+
+* No dedicated release branch; stabilization must happen within PRs
+* Backporting fixes to old versions is trickier
+
+**Typical flow**
+
+1. Branch from `main` → push commits → open PR.
+2. CI runs tests/lint; code review.
+3. Merge (often squash‑merge) to `main` → auto‑deploy.
+
+```mermaid
+flowchart LR
+  classDef main fill:#222,color:#fff,stroke:#444;
+  classDef feat fill:#ddd,color:#222,stroke:#999;
+  M[(main - always deployable)]:::main
+
+  F1[feature/search]:::feat --> PR1{PR + CI}
+  PR1 --> M
+
+  F2[feature/profile]:::feat --> PR2{PR + CI}
+  PR2 --> M
+
+  M -->|tag & deploy| DEP[(production)]
+```
+
+**Commands snapshot**
+
+```bash
+# start a change
+git checkout -b feature/search main
+# push & open PR on GitHub
+git push -u origin feature/search
+# after review, squash-merge via GitHub UI (or CLI) into main
+# deploy pipeline triggers from main
+```
+
+---
+
+### Trunk‑Based Development (TBD)
+
+**When it shines:** High‑velocity teams, continuous integration, continuous deployment with **feature flags**.
+
+**Core idea**
+
+* One trunk branch (`main`/`trunk`)
+* **Very short‑lived** branches (hours/day), rebased frequently
+* Feature flags toggle incomplete work in production
+* Release via tags (and optionally ephemeral release branches)
+
+**Pros**
+
+* Fast feedback and simplest history
+* Encourages tiny PRs and continuous integration
+* Works best with CD + feature flags/dark launches
+
+**Cons**
+
+* Requires strong CI discipline and test coverage
+* Without feature flags, incomplete work can leak
+
+**Typical flow**
+
+1. Branch from `main` → small change → rebase/merge back quickly.
+2. Wrap incomplete features behind flags.
+3. Tag releases and (optionally) create short‑lived `release/*` branches for hardening.
+
+```mermaid
+flowchart LR
+  classDef trunk fill:#0a5,color:#fff,stroke:#083;
+  classDef short fill:#ddd,color:#222,stroke:#999;
+  classDef note fill:#eef,color:#222,stroke:#99f,stroke-dasharray: 3 3;
+
+  T[(main/trunk)]:::trunk
+  B1[branch A (hours/day)]:::short --> T
+  B2[branch B (hours/day)]:::short --> T
+  B3[branch C (hours/day)]:::short --> T
+
+  T --> TAG1((tag v1.2.0))
+  T --> REL[/optional release/1.2/]:::short --> TAG2((tag v1.2.1))
+
+  FF[Feature flags & CI]:::note -. guard & test .-> T
+```
+
+**Commands snapshot**
+
+```bash
+# tiny branch
+git checkout -b chore/refactor-x main
+# keep up to date, rebase if needed
+git fetch origin && git rebase origin/main
+# open small PR, merge quickly (hours/day)
+# releases via tags
+git tag v1.2.0 && git push origin v1.2.0
+```
+
+---
+
+### Recommendations by Scenario
+
+#### 1) Small team, web app, **continuous deployment**
+
+**Choose: Trunk‑Based Development (with feature flags).**
+
+* **Why:** Minimal overhead, fastest integration, and best fit for CD. Tiny PRs keep the main branch green and releasable at all times. Feature flags allow merging early/often without exposing incomplete work.
+* **How to run it:**
+
+  * Protect `main`: require PR + status checks (tests, lint, security scan).
+  * Enforce small PRs (< \~300 lines), branch life < 1 day.
+  * Add a feature‑flag framework (e.g., config toggles, remote flags).
+  * Auto‑deploy on merge to `main`; tag each production deploy.
+
+#### 2) Large team, enterprise product, **monthly releases**
+
+**Choose: Gitflow.**
+
+* **Why:** Release branches support prolonged stabilization and parallel feature development for the next version. Clear hotfix path to production while keeping `develop` moving. Easier coordination across many squads and external stakeholders.
+* **How to run it:**
+
+  * Long‑lived `develop` and `master`; use `release/*` for hardening near month‑end.
+  * Enforce PRs into `develop`; limit risky changes after cutting a `release/*`.
+  * Tag on `master` for each monthly GA (e.g., `v2025.09`).
+  * Use `hotfix/*` from `master` for urgent production issues; merge back to both `master` and `develop`.
+
+---
+
+### Quick Decision Guide
+
+* Need **CD** and speed, few teams → **Trunk‑Based** (with flags)
+* Simple cloud app, frequent deploys, small team → **GitHub Flow** works well too
+* Multiple teams, formal releases, backports/hotfixes → **Gitflow**
+
+---
