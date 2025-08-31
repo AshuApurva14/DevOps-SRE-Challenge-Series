@@ -134,6 +134,23 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
     
  - Push the tags to Github.
 
- 
+---
+
+## Task 4: Sync with Upstream
+
+ - Fork a repo, add upstream, and sync changes.
+
+   1. Fork a repo 
+
+   2. Add upstream `git remote add upstream <repo url>`
+
+     ![Add Upstream](Day_3_9.png)     
+
+   3. Sync fork repo `git fetch upstream`
+
+     ![Sync upstream](Day_3_11.png)
+
+     ![Sync upstream](Day_3_11.png)
+
 
 
