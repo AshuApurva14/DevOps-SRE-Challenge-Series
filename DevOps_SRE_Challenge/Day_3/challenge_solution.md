@@ -106,7 +106,34 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
 
 ## Task 3: Tag a Release
 
- - Create an annotated tag v2.0.0.
+ **In the context of Git, tagging is a way to label specific points in your project's history, most commonly to mark release versions, major milestones, or significant events.**
 
-   1. use command 
+ **Tagging in Git involves placing a “tag” on a particular commit (snapshot of your project), like sticking a bookmark or sticky note on a key page in a book. Once added, this tag will always point to the exact state of your repository at that moment, making it easy to revisit, share, or reference that version.**
+
+
+ **Why Use Tags in Git?**
+  
+  *Release Management:*
+  - Tags are essential for labeling releases, such as v1.0 or v2.3.1, so anyone can retrieve that exact version for bug fixes, deployment, or reference later.
+
+  *Version Control:*
+  - Tags help identify stable, feature-complete, or test versions of the software in the repository.
+
+  *Collaboration:*
+  - They provide an easy way for teams or automation tools to refer to specific code versions without confusion.
+
+  **Two types of tags are available in [git](https://git-scm.com/book/en/v2/Git-Basics-Tagging):**
+   1. *Lightweight tags*
+   2. *Annotated tags*
+
+---
+
+ - Create an *annotated tag* v2.0.0.
+
+   1. You can create an annotated tag using `git tag -a v2.0.0 -m "Official release of version 2.0".`
+    
+ - Push the tags to Github.
+
+ 
+
 
