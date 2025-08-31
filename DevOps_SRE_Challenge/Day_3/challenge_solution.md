@@ -238,7 +238,7 @@ That’s what git cherry-pick does — it copies a specific commit from one bran
 
  - Cherry-pick the commit:
 
-    `git cherry-pick g7h8i9`
+    `git cherry-pick `
 
 
  - Now main has that commit, without merging the other ones.
