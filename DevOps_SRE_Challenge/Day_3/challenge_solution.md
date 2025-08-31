@@ -154,3 +154,117 @@ So, this is how you can utilise the `git commit ---amend` command to fix **typos
 
 
 
+## Task 5: Stashing and Cherry-Picking
+
+🔹 1. Git Stash
+
+👉 Analogy:
+Imagine you’re writing a document, but someone tells you, “Stop, switch tasks!”. Instead of throwing away your half-written page, you quickly put it in a drawer (stash) and come back later.
+
+That’s what git stash does — it temporarily shelves (stashes) your uncommitted changes so you can work on something else, and then reapply them later.
+
+
+✅ Example: Using Stash
+
+- You’re on main branch, editing file1.py and file2.py.
+ 
+`git status`
+
+shows:
+
+```
+modified: file1.py
+modified: file2.py
+```
+
+
+- Suddenly, you need to switch branches but don’t want to commit.
+
+
+`git stash`
+
+
+
+- This saves your modifications and cleans your working directory.
+
+   - Now git status shows a clean tree.
+
+   - Switch branches or pull updates safely.
+
+   - When ready, bring back your changes:
+
+
+`git stash pop`
+
+
+- This reapplies your stashed changes and removes them from stash.
+
+  👉 If you want to keep the stash for reuse:
+
+
+`git stash apply`
+
+
+
+📝 **Stash Commands Cheatsheet**
+
+- `git stash` → save uncommitted changes
+
+- `git stash list` → see all stashes
+
+- `git stash apply stash@{1}` → apply a specific stash
+
+- `git stash drop stash@{1}` → delete a stash
+
+- `git stash clear` → remove all stashes
+
+
+---
+
+🔹 2. Git Cherry-Pick
+
+👉 Analogy:
+Imagine you baked a cake with 5 layers (commits), but your friend only wants the 3rd layer. Instead of giving the whole cake, you pick that specific layer and place it into another cake.
+
+That’s what git cherry-pick does — it copies a specific commit from one branch and applies it to another branch.
+
+✅ Example: Cherry-Pick
+
+ - On feature-branch, you make 3 commits:
+
+    `a1b2c3 Add login API`
+
+    `d4e5f6 Add debug logs`
+
+    `g7h8i9 Fix login bug`
+
+
+ - Your teammate says: “I need just the bug fix (g7h8i9) in main right now!”
+
+ - Switch to main:
+
+    `git checkout main`
+
+
+ - Cherry-pick the commit:
+
+    `git cherry-pick g7h8i9`
+
+
+ - Now main has that commit, without merging the other ones.
+
+📝 **Cherry-Pick Cheatsheet**
+
+`git cherry-pick <commit-hash>` → pick one commit
+
+`git cherry-pick A..B` → pick a range of commits (exclusive of A, inclusive of B)
+
+`git cherry-pick --abort` → cancel if conflicts occur
+
+`git cherry-pick --continue` → continue after fixing conflicts
+
+---
+
+
+
+
