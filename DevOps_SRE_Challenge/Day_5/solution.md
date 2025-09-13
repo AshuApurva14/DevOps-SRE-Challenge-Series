@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
   <img width="3198" height="1866" alt="app.py" src="https://github.com/user-attachments/assets/2f881099-07b8-4935-b828-15e89395e2b3" />
 
- ![app.py](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/app.py)
+  [app.py](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/app.py)
 
 ---
 
