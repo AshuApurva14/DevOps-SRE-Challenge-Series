@@ -8,10 +8,11 @@
 
 2. Created a app.py file in the repo and add the below code.
 
-   *app.py*
+   [app.py](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/app.py)
 
-  ```
-  from flask import Flask
+
+```
+from flask import Flask
 
 app = Flask(__name__)
 
@@ -26,13 +27,12 @@ if __name__ == '__main__':
 
   <img width="3198" height="1866" alt="app.py" src="https://github.com/user-attachments/assets/2f881099-07b8-4935-b828-15e89395e2b3" />
 
-  [app.py](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/app.py)
-
+  
 ---
 
 3. Created a Dockerfile with below code.
 
-*Dockerfile*
+[Dockerfile](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/Dockerfile)
 
 ```
 # Use official Python image
@@ -55,7 +55,7 @@ CMD ["python", "app.py"]
 
 ```
 
-![Dockerfile](Day_5_3.png)
+<img width="3200" height="1872" alt="Dockerfile" src="https://github.com/user-attachments/assets/439d744f-cddf-4c8f-b92c-2adf899a4dcd" />
 
 ---
 
@@ -74,46 +74,25 @@ CMD ["python", "app.py"]
 
      - Go to .github > workflows > cicd.yaml.
 
-     cicd.yaml
-```
-      name: Build, test and deploy Python webapp
+      [cicd.yaml](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/.github/workflows/cicd.yml)
 
 
-      on:
-        workflow_dispatch:  # For Manual trigger from any branch
-
-
-      jobs:
-         build-and-test:           # Job name
-         runs-on: [ubuntu_latest]  # GitHub runner configuration
-
-
-
-        steps:
-          
-          - name: Checkout       # checkout the repository
-            uses: actions/checkout@v5.0.0
-
-
-          - name:
-
-```
   **Refer below:**
 
-  ![gha workflow](Day_5_4.png)
+   <img width="3200" height="1710" alt="cicd.yaml" src="https://github.com/user-attachments/assets/eda7c81d-032a-4c72-8022-79f18ee179bd" />
 
     - Now let's test the workflow execution. Go to *action* tab select the workflow from the left side.
 
     - Then you will be able to see a *Run workflow* with dropdown list (branch details), select the branch and **Run Worklfow** to trigger the workflow.
 
 
-  ![action tab](Day_5_5.png)
+  <img width="3200" height="1732" alt="python_workflow" src="https://github.com/user-attachments/assets/99fb8fa4-1763-4a22-8c65-c290d3deba32" />
 
 
    - After triggering, go to the logs of the workflow to see how the execution is hapening.
 
 
-   ![workflow logs](Day_5_6.png)
+   <img width="3200" height="1814" alt="python_workflow_logs" src="https://github.com/user-attachments/assets/ad2d67b9-952d-40fe-84a9-fac4f5094dfc" />
 
 ---
 
