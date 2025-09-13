@@ -8,7 +8,9 @@
 
 2. Created a app.py file in the repo and add the below code.
 
-  *app.py*
+   *app.py*
+
+      <img width="3198" height="1866" alt="app.py" src="https://github.com/user-attachments/assets/2f881099-07b8-4935-b828-15e89395e2b3" />
 
   ```
   from flask import Flask
