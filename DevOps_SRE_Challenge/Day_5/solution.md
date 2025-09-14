@@ -416,3 +416,66 @@ updates:
 5. Vulnerability management workflow
 
 
+
+# CI/CD Pipeline Architecture
+
+```mermaid
+%%{init: {
+  'theme': 'neutral',
+  'themeVariables': {
+    'fontFamily': 'arial',
+    'fontSize': '16px',
+    'primaryColor': '#1f77b4',
+    'primaryTextColor': '#fff',
+    'primaryBorderColor': '#123752',
+    'lineColor': '#123752',
+    'secondaryColor': '#4a90e2',
+    'tertiaryColor': '#6cc04a'
+  }
+}}%%
+
+flowchart TB
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef pipeline fill:#e1f3fe,stroke:#1f77b4,stroke-width:2px;
+    classDef security fill:#fff3e0,stroke:#ff9800,stroke-width:2px;
+    classDef deployment fill:#e8f5e9,stroke:#4caf50,stroke-width:2px;
+
+    subgraph IDE["Development Environment"]
+        DEV[Developer] --> |Git Push| REPO[GitHub Repository]
+    end
+
+    subgraph CI["Continuous Integration"]
+        direction TB
+        REPO --> PIPE[GitHub Actions Pipeline]
+        
+        subgraph Quality["Quality Gates"]
+            direction LR
+            LINT[Ruff Linter] --> 
+            TEST[Unit Tests] -->
+            COV[Coverage Check]
+        end
+
+        subgraph Security["Security Checks"]
+            direction LR
+            GITLEAKS[Gitleaks] -->
+            CODEQL[CodeQL Analysis] -->
+            TRIVY[Trivy Scanner]
+        end
+    end
+
+    subgraph CD["Continuous Deployment"]
+        direction TB
+        DHUB[Docker Hub] --> 
+        DEPLOY[Deploy Container] -->
+        HEALTH[Health Check] -->
+        NOTIFY[Status Notification]
+    end
+
+    PIPE --> Quality
+    Quality --> Security
+    Security --> CD
+
+    class IDE,CI,CD default;
+    class Quality,Security pipeline;
+    class GITLEAKS,CODEQL,TRIVY security;
+    class DHUB,DEPLOY,HEALTH,NOTIFY deployment;
