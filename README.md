@@ -1,5 +1,7 @@
 # DevOps & SRE Challenge Series
 
+<img width="1024" height="1536" alt="DevOps SRE" src="https://github.com/user-attachments/assets/fe780b71-33bd-421e-8745-417b13352e33" />
+
 A comprehensive series of daily challenges to learn and practice DevOps and Site Reliability Engineering (SRE) concepts.
 
 ## 📚 Repository Structure
