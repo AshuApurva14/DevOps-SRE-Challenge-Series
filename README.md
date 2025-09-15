@@ -142,8 +142,3 @@ scripts/create_file.sh <day_number>
 - SRE practitioners
 - Open source contributors
 
-## 📧 Contact
-
-Your Name - [@YourTwitter](https://twitter.com/YourTwitter)
-
-Project Link: [https://github.com/username/DevOps-SRE-Challenge-Series](https://github.com/username/DevOps-SRE-Challenge-Series)
