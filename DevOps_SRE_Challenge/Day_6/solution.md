@@ -122,9 +122,14 @@
 
 #### **Step 1: Create an EC2 Instance**
 
-  1. Go to **AWS Console Page** > Search or Select **EC2** service > Select **Launch instance** option > name the instance > Selcet AMI types as mentioned in the doc > add key pair 
+  1. Go to **AWS Console Page** > Search or Select **EC2** service > Select **Launch instance** option > **Name** the instance > Selcet **AMI** types as mentioned in the doc > add **key pair** 
 
-  2. Add security group rules by allowing port 22 and 80 respectively.
+  2. Add **Security group** rules and allow inbound traffic on ports **22 (SSH)** and **80 (HTTP)**.
+
+
+ <img width="3189" height="1762" alt="EC2_instance" src="https://github.com/user-attachments/assets/93d86383-0fe8-4bd7-baac-47cc3b4249e5" />
+
+  
 
   
  
