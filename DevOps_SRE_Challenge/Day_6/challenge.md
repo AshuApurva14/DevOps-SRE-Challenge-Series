@@ -1,62 +1,100 @@
-## 3️⃣ Challenge Breakdown
+# Challenge Day 5
 
-### **📝 Theoretical Questions**
-Answer the following questions:
-1. What is a GitHub runner?
-2. How do self-hosted runners differ from GitHub-hosted runners?
-3. What security considerations should you take when using self-hosted runners?
-4. How can you scale self-hosted runners?
-5. Can a single self-hosted runner be used for multiple repositories? Why or why not?
+##  Theory Challenge
 
+ 1. What are the key differences between GitHub Actions and Jenkins?
+   
+     **Answer:**
 
+     Key difference between GitHub Actions and Jenkins are following:
 
-### **⚙️ Practical Challenge: Setting Up a Self-Hosted Runner**
+     - GitHub Actions provide Ease of Use and 
 
-#### **Step 1: Create an EC2 Instance**
-1. Launch an AWS EC2 instance (Ubuntu 22.04 recommended).
-2. Allow inbound traffic on ports **22 (SSH)** and **80 (HTTP)**.
+ 2. Describe the general structure of a GitHub Actions workflow.
 
-#### **Step 2: Configure GitHub Self-Hosted Runner**
-1. Navigate to your **GitHub repository** → **Settings** → **Actions** → **Runners**.
-2. Click **"New self-hosted runner"**, select **Linux**, and follow the instructions to set it up.
-3. SSH into the EC2 instance and install the runner using the provided commands.
-4. Start the runner:
-   ```bash
-   ./run.sh
-   ```
-
-#### **Step 3: Deploy the Snake Game**
+   
 
 
-https://github.com/user-attachments/assets/3c0e0fc7-a5ef-4285-9b3a-4cdb57915f0e
+ 3. How to manage variables and secrets in GitHub Actions?
 
 
-1. Install **Docker** on your EC2 instance:
-   ```bash
-   sudo apt update
-   sudo apt install docker.io -y
-   ```
-2. Clone the **Snake Game repository**:
-   ```bash
-   git clone https://github.com/clear-code-projects/Snake
-   cd Snake
-   ```
-3. Build and run the application as a Docker container:
-   ```bash
-   docker build -t snake-game .
-   docker run -d -p 80:5000 snake-game
-   ```
-4. Confirm the deployment by accessing `http://<EC2-Public-IP>` in a browser.
 
-5. You are required to create a GitHub Actions workflow that:
- **Builds and pushes a Docker image** to Docker Hub.
- **Deploys the application on Self Hosted GitHub Runners**
- **Validates that the application is running correctly**.
- **Sends an email notification** with the deployment status.
+ ## Practical Challenge
 
-#### **Step 4: Take Screenshots for Submission**
-- Running EC2 instance (`aws ec2 describe-instances`).
-- GitHub Actions workflow logs showing execution on the self-hosted runner.
-- Webpage running the Snake Game.
+ ### Challenge Scenario:
+
+   You are required to create a GitHub Actions workflow that:
 
 
+  1. Builds and pushes a Docker image to Docker Hub.
+  2. Deploys the application on GitHub Runners
+  3. Validates that the application is running correctly.
+  4. Sends an email notification with the deployment status.
+  
+  Provided Code:
+
+     app.py
+
+```
+    from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, Welcome to Season 2! You are learning GitHub Actions."
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```
+
+    Dockerfile
+    
+```
+    # Use official Python image
+     FROM python:3.9-slim
+
+    # Set working directory
+    WORKDIR /app
+
+    # Copy files
+    COPY app.py /app
+
+    # Install Flask
+    RUN pip install flask
+
+    # Expose port 5000
+    EXPOSE 5000
+
+    # Run Flask app
+    CMD ["python", "app.py"]
+
+```
+
+
+
+ ## Challenges Faced & Solutions
+
+### 1. Module Import Error
+**Challenge**: Test failures due to module import issues
+```
+ModuleNotFoundError: No module named 'app'
+```
+**Solution**: 
+- Ensure proper directory structure
+- Add `__init__.py` files
+- Configure PYTHONPATH in CI environment
+
+### 2. Email Notifications
+**Challenge**: Gmail SMTP authentication failures
+**Solution**: 
+- Use App-specific passwords
+- Configure proper SMTP settings
+- Alternative: Use GitHub notification settings
+
+### 3. Docker Security
+**Challenge**: Container vulnerabilities
+**Solution**: 
+- Implement Trivy scanning
+- Use minimal base images
+- Regular dependency updates with Dependabot

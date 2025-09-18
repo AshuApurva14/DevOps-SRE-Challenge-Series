@@ -1,336 +1,481 @@
-# DevOps SRE Challenge Day 7 Solution
+# Solution: GitHub Actions CI/CD Pipeline Implementation
 
- - #### So, till Day 7 challenge I have learned and gained lot of experience about DevOps SRE stuffs.Today I will be focsing on solving the theortical and Practical problems on GitHub Self-Hosted Runners.
+## 1. Project Components and Their Purpose
 
-- #### I will solve the theortical questions based on GitHub Self-Hosted Runners and it usecases.
+### Application Components
+- **Flask Application**: Lightweight web framework for Python
+- **Docker Container**: Ensures consistent environment across deployments
+- **GitHub Actions**: Automates testing, building, and deployment
+- **Security Scanning**: Protects application from vulnerabilities
 
----
+## 2. Step-by-Step Implementation
 
-### **Theortical Challenges**
----
+### 2.1 Repository Setup
+1. Created GitHub repository **python-webapp**
+   <img width="3198" height="1740" alt="python-webapp" src="https://github.com/user-attachments/assets/e634431a-8bb7-4ff1-a842-99975e94e70f" />
 
-1. **What is a GitHub runner?**
+   **Why**: Centralized version control and collaboration platform
 
-  *A GitHub runner is a service that runs GitHub Actions workflows.*
-  
-  **Key points:**
+### 2.2 Application Development
 
-   - Executes CI/CD pipeline jobs
-   - Can be hosted by GitHub or self-hosted
-   - Runs one job at a time
-   - Reports progress and logs back to GitHub
-   - Supports various operating systems (Linux, Windows, macOS)
+#### Flask Application (app.py)
+```python
+from flask import Flask
+app = Flask(__name__)
 
-2. **How do self-hosted runners differ from GitHub-hosted runners?**
+@app.route('/')
+def home():
+    return "Hello, Welcome to Season 2! You are learning GitHub Actions."
 
-   | Feature | GitHub-hosted | Self-hosted |
-   |---------|--------------|-------------|
-   | Management | Managed by GitHub | Managed by you |
-   | Hardware | Predefined specs | Custom hardware |
-   | Cost | Uses GitHub minutes | Uses your infrastructure |
-   | Maintenance | Automatic updates | Manual updates required |
-   | Software | Standard toolsets | Custom software possible |
-   | Security | Auto-wiped after use | Manual security measures |
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```
+**Purpose**:
+- Creates a simple web endpoint
+- Runs on all network interfaces (0.0.0.0)
+- Uses port 5000 for HTTP access
 
+#### Dockerfile Configuration
 
-3. **Security considerations for self-hosted runners:**
+[Dockerfile](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/Dockerfile)
 
-   - **Access Control**
-     ```bash
-     # Example: Restrict runner to specific IP ranges
+<img width="3200" height="1872" alt="Dockerfile" src="https://github.com/user-attachments/assets/439d744f-cddf-4c8f-b92c-2adf899a4dcd" />
 
-     sudo ufw allow from 192.168.1.0/24 to any port 22
-     ```
+```Dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY app.py /app
+RUN pip install flask
+EXPOSE 5000
+CMD ["python", "app.py"]
+```
+**Purpose**:
+- Uses lightweight Python image for smaller size
+- Creates isolated application environment
+- Installs only necessary dependencies
+- Exposes port for web access
 
-   - **Network Security**
-     - Use VPN or private networking
-     - Implement proper firewall rules
-     - Monitor network traffic
+### 2.3 CI/CD Pipeline Components
 
-   - **Environment Isolation**
-     ```yaml
-     # Example: Using Docker for job isolation
+ [cicd.yaml](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/.github/workflows/cicd.yml)
 
-     jobs:
-       build:
-         runs-on: self-hosted
-         container: ubuntu:20.04
-     ```
+  <img width="3200" height="1710" alt="cicd.yaml" src="https://github.com/user-attachments/assets/eda7c81d-032a-4c72-8022-79f18ee179bd" />
 
-   - **Secret Management**
+#### 1. Code Quality (Linting)
 
-     - Use GitHub Secrets
-     - Implement vault solutions
-     - Regular secret rotation
+```yaml
+- name: Run Ruff linter
+  uses: astral-sh/ruff-action@v3.5.1
+```
+**Why Important**:
+- Ensures consistent code style
+- Catches syntax errors early
+- Improves code maintainability
+- Reduces review time
 
+#### 2. Security Scanning
 
-4. **How to scale self-hosted runners?**
+[gitleaks.yml](https://github.com/AshuApurva14/python-webapp/blob/c70662a3642a1431d73e5424b5374ca5d5339701/.github/workflows/gitleaks.yaml)
 
-   - **Horizontal Scaling**
-     ```bash
-     # Example: Auto-scaling script
+<img width="3200" height="1684" alt="Image" src="https://github.com/user-attachments/assets/aae261e3-1617-4996-ac70-8bd5a161998a" />
 
-     ./config.sh --url https://github.com/org/repo --token ${TOKEN}
-     ```
-
-   - **Load Distribution**
-     ```yaml
-     # GitHub Actions workflow example
-
-     jobs:
-       build:
-         runs-on: 
-           group: production-runners
-           labels: ubuntu-latest
-     ```
-
-   - **Auto-scaling Solutions**
-
-     - AWS Auto Scaling Groups
-     - Kubernetes-based runners
-     - Docker machine runners
+```yaml
+- name: Run Gitleaks
+  uses: gitleaks/gitleaks-action@v2
+```
+**Purpose**:
+- Detects hardcoded secrets
+- Prevents credential exposure
+- Maintains security best practices
 
 
-5. **Can a single self-hosted runner be used for multiple repositories?**
+#### 3. CodeQL Security Analysis
 
-   Yes, self-hosted runners can be shared across repositories with proper configuration:
+<img width="3200" height="1642" alt="Image" src="https://github.com/user-attachments/assets/64a615c2-566d-4c69-92b5-0ce4d2ef9dcf" />
 
-   - **Organization Level Setup**
-     ```yaml
-     # Organization runner configuration
+```yaml
+- name: Initialize CodeQL
+  uses: github/codeql-action/init@v2
+  with:
+    languages: python
 
-     actions:
-       runners:
-         groups:
-           - name: shared-runners
-             repositories:
-               - repo1
-               - repo2
-     ```
-
-   **Considerations:**
-
-   - Security boundaries between repositories
-   - Resource allocation and queuing
-   - Maintenance scheduling
-   - Access control management
-
-
----
-
-### **⚙️ Practical Challenge: Setting Up a Self-Hosted Runner**
-
-#### **Step 1: Create an EC2 Instance**
-
-  1. Go to **AWS Console Page** > Search or Select **EC2** service > Select **Launch instance** option > **Name** the instance > Selcet **AMI** types as mentioned in the doc > add **key pair** 
-
-  2. Add **Security group** rules and allow inbound traffic on ports **22 (SSH)** and **80 (HTTP)**.
-
-
-  <img width="3190" height="1812" alt="ec2_instance" src="https://github.com/user-attachments/assets/3bca3195-9de3-4a67-9604-e0bc4b00b131" />
-
-  
-
-#### **Step 2: Configure GitHub Self-Hosted Runner**
-
-  1. Navigate to your **GitHub repository** → **Settings** → **Actions** → **Runners**.
-
-  <img width="3200" height="1724" alt="Self-Hosted Runner" src="https://github.com/user-attachments/assets/48602ac5-8f90-435a-9354-5fbd1d94501b" />
-
-
-
-  2. Click **"New self-hosted runner"**, select **Linux**, and follow the instructions to set it up. 
-
-  <img width="3200" height="1730" alt="Day_7_3" src="https://github.com/user-attachments/assets/febd8ece-6eef-4812-bfc9-ce48fc646c1a" />
-
-
-
-  3. SSH into the EC2 instance and install the runner using the provided commands.
-
-    - For SSH, I will use Mobaxterm. You can use any SSH tool or even login directly from console using *EC2 Instance Connect*.
-
-    <img width="3200" height="1680" alt="SSH login" src="https://github.com/user-attachments/assets/8ec0b689-9f9f-42ac-adb6-b76936f8acb3" />
-
-    - After login, I refered the instructions below and executed the below comamnds for runner setup:
-
-  **Download**
-  
-  <img width="3200" height="1752" alt="runner config" src="https://github.com/user-attachments/assets/ed5fc4fd-70f9-4f53-b77c-090f54dda1b9" />
-
-```bash
-  # Create a folder
-    mkdir actions-runner && cd actions-runnerCopied
-    
-  # Download the latest runner package
-
-    curl -o actions-runner-linux-x64-2.328.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.328.0/actions-runner-linux-x64-2.328.0.tar.gz
-
-  # Optional: Validate the hash
-    echo "Hash value" | shasum -a 256 -c
-    
-  # Extract the installer
-    tar xzf ./actions-runner-linux-x64-2.328.0.tar.gz
-
+- name: Perform CodeQL Analysis
+  uses: github/codeql-action/analyze@v2
 ```
 
-  **Configure**
+**Purpose**:
+- Static Code Analysis
+- Identifies security vulnerabilities
+- Detects common coding errors
+- Provides detailed security reports
 
-```bash
-  # Create the runner and start the configuration experience
-  ./config.sh --url <GitHub URL> --token <token>
+**Benfits**:
+- Automated security review
+- Early vulnerability detection
+- Code Quality improvement
+- Complaiance requrements
 
+
+#### 3. Docker Build Process
+
+<img width="3200" height="1762" alt="Image" src="https://github.com/user-attachments/assets/6190fccf-55f2-4136-b981-bec880c14be4" />
+
+```yaml
+- name: Build and push Docker image
+  uses: docker/build-push-action@v4
+  with:
+    context: .
+    push: true
+    tags: ${{ secrets.DOCKER_USERNAME }}/python-webapp:latest
+```
+**Why Important**:
+- Creates reproducible builds
+- Ensures consistent deployments
+- Enables easy distribution
+- Maintains version control
+
+#### 4. Automated Testing
+
+<img width="3194" height="1428" alt="Image" src="https://github.com/user-attachments/assets/c3a9dc34-fef0-4320-9329-ae76c251d41c" />
+
+```yaml
+- name: Run Tests
+  run: |
+    python -m pytest tests/
+    coverage run -m pytest
+```
+**Benefits**:
+- Validates functionality
+- Ensures quality code
+- Prevents regressions
+- Measures code coverage
+
+#### 5. Image Vulnerability scanning
+
+<img width="3200" height="1748" alt="Image" src="https://github.com/user-attachments/assets/64299d93-8ed9-40db-804c-78f16afff18b" />
+
+```yaml
+- name: Trivy Scanner
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: ${{ secrets.DOCKER_USERNAME }}/python-webapp:latest
+```
+**Purpose**:
+- Scans for vulnerabilities
+- Checks dependencies
+- Ensures container security
+- Provides security reports
+
+#### 6. Deployment & Application Status
+
+<img width="3200" height="1744" alt="Image" src="https://github.com/user-attachments/assets/4f74c7b7-7a9b-4e3e-b138-9d0dbb740a9b" />
+
+
+```yaml
+- name: Deploy Application
+  run: |
+    docker run -d -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/python-webapp:latest
+
+- name: Health Check
+  run: |
+    curl -s http://localhost:5000/health
 ```
 
- <img width="2764" height="1352" alt="ec2_instance-execution" src="https://github.com/user-attachments/assets/04e0db39-3751-4f37-8cd8-069a44f5376e" />
+**Benefits**:
+- Automates deployment process
+- Validates application health
+- Ensures availability
+- Monitors performance
 
-  4. Started the runner:
+#### 7. Email Notification 
 
-   ```bash
-   ./run.sh
+<img width="3200" height="1702" alt="Image" src="https://github.com/user-attachments/assets/49babda4-e9d0-4580-8851-b9305bd39a81" />
 
+```yaml
+  - name: Send deployment status email
+          uses: dawidd6/action-send-mail@v3
+          with:
+              server_address: smtp.gmail.com
+              server_port: 465
+              username: ${{ secrets.EMAIL_USERNAME }}
+              password: ${{ secrets.EMAIL_PASSWORD }}
+              subject: "🚀 Deployment Status: ${{ steps.deployment_status.conclusion }}"
+              to: "devopssre5@gmail.com"
+              from: GitHub Actions
+              body: |
+                Hello,
+                
+                Deployment for *${{ github.repository }}* on commit ${{ github.sha }} has finished.
+                Status: **${{ job.status }}**
+
+                Application is running successfully!.
+
+                Triggered by: ${{ github.actor }}
+```
+
+
+## 3. Best Practices Implemented
+
+### Security
+1. **Secret Management**
+   - Using GitHub Secrets
+   - Environment variables
+   - No hardcoded credentials
+
+### Monitoring
+1. **Health Checks**
+   ```yaml
+   health_check:
+     curl -s http://localhost:5000/health
    ```
- 
-  <img width="2768" height="1672" alt="start_runner" src="https://github.com/user-attachments/assets/ad2cc4b3-4541-4182-b043-53e3881254a8" />
+   - Validates application status
+   - Ensures continuous operation
 
----
+### Automation
+1. **Dependency Updates**
+   ```yaml
+   - package-ecosystem: "pip"
+     directory: "/"
+     schedule:
+       interval: "weekly"
+   ```
+   - Regular security updates
+   - Automated PR creation
+   - Keeps dependencies current
 
-#### **Step 3: Deploy the Snake Game**
+## 4. Development Workflow
 
-**For deployment of Snake Game in GitHub Runner, following prequisites needs to be fulfilled:
-
-1. Install **Docker** on your EC2 instance and configure:
-
+### Local Setup
 ```bash
-   sudo apt update
-   sudo apt install docker.io -y
-```
- **To run Docker without root privileges, see Run the Docker daemon as a non-root user (Rootless mode).**
+# Clone and setup
+git clone https://github.com/<username>/python-webapp.git
+python -m venv venv
+source venv/bin/activate
 
-  - To create the docker group and add your user.
-    ```bash
-     sudo sudo groupadd docker
-    ```
-
-  - Create the docker group.
-    ```bash
-    sudo groupadd docker
-    ```
-  - Add your user to the docker group.
-    ```bash
-    sudo usermod -aG docker $USER
-    ```
-
-
-  <img width="2768" height="770" alt="docker" src="https://github.com/user-attachments/assets/44149866-ceb3-4add-b36f-a0a6fff998ed" />
-
----
-
-2.For deployment of Snake Game in GitHub Runner, I created GitHub actions workflows file name *cicd.yaml* file under path *.github/workflows* in the Snake Game Repo.
-
-[cicd.yaml](https://github.com/AshuApurva14/season2-snake_game/blob/main/.github/workflows/cicd.yaml)
-
- <img width="3168" height="1502" alt="cicd" src="https://github.com/user-attachments/assets/c19e9c5d-840f-44b4-95d4-5ba51c181cab" />
-
-
-*This CICD workflow has following steps:*
-
-
-
-  - Lint using ruff
-
-      <img width="3180" height="1432" alt="lint" src="https://github.com/user-attachments/assets/6129bc5f-455f-4419-93e1-00a88d3c54a8" />
-
-
-  - Secret_scanning using gitleaks
-
-      <img width="3200" height="1744" alt="Secret_scanning" src="https://github.com/user-attachments/assets/35bf4f9e-da49-4043-abe7-1575c4827845" />
-
-  - Code_analysis using SonarQube
-
-  - Automated testing using pytest
-
-  - Docker imagde build using docker
-
-    <img width="3188" height="1600" alt="Imge_build" src="https://github.com/user-attachments/assets/ae7abba0-3134-4118-a4d1-ea14fa1c962b" />
-
-  - Image Vulnerability Scanning using Aqua Trivy
-
-    <img width="3176" height="1264" alt="trivy" src="https://github.com/user-attachments/assets/9686b69b-535e-4293-bb17-af2e48087bca" />
-
-  - Push docker ige to DockerHub
-
-    <img width="3182" height="1318" alt="dockerhub" src="https://github.com/user-attachments/assets/d0b3d491-deb3-47ff-a3c5-6813c06ffbe9" />
-
-  - Set image tag for deployment
-
-  - Deploy the application in GitHub RUnner
-
-    <img width="3166" height="1668" alt="Image_pull&deploy" src="https://github.com/user-attachments/assets/a75f36b5-79e2-4c8e-92f9-9119f3a8c271" />
-
-  - Check and verify the application Health
-
-    <img width="3194" height="1258" alt="app_health_check" src="https://github.com/user-attachments/assets/4cf754ed-eadb-4672-9aa6-d48aa5938e48" />
-
-  - Send and Email notifictaion for deployment status
-
-     <img width="2710" height="810" alt="notify" src="https://github.com/user-attachments/assets/0b2ba6fc-0f81-47cb-a775-c25c86f1e6b2" />
-
-     <img width="3184" height="956" alt="mail_confirm" src="https://github.com/user-attachments/assets/5ea7367c-b537-42c1-ba51-546b14ba1681" />
-  
-
-
-
-3. **Snake Game** in Browser
-
-    <img width="3190" height="1897" alt="Snake_Game" src="https://github.com/user-attachments/assets/fda24544-fb04-4a30-a83b-6ed3484534f2" />
-
-
-
-### **🧠Learnings and Challenges🛠️ faced.**
-
-🔹 Docker Permission Issue
-
-Faced: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock.
-
-Reason: My user wasn’t added to the docker group.
-
-Fix:
-```bash
-sudo groupadd docker          # create group if not exists
-sudo usermod -aG docker $USER # add current user
-newgrp docker                 # refresh group
+# Install and run
+pip install flask
+python app.py
 ```
 
-✅ After this, I could run Docker commands without sudo.
-
-
----
-
-🔹 SonarQube Analysis Issue
-
-Used SonarQube CLI (sonar-scanner) for static code analysis.
-
-Issue: Authentication & config mismatches during CI/CD run.
-
-Fix:
-
-Generated a token from SonarQube dashboard.
-
-Passed it as secret in GitHub Actions:
+### Container Testing
 ```bash
-- name: SonarQube Scan
-  run: sonar-scanner \
-    -Dsonar.projectKey=my-project \
-    -Dsonar.sources=. \
-    -Dsonar.host.url=http://localhost:9000 \
-    -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+# Build locally
+docker build -t python-webapp .
+
+# Test container
+docker run -p 5000:5000 python-webapp
 ```
 
-✅ This resolved the analysis issue, and reports were successfully uploaded to SonarQube.
+
+## Challenges Faced & Solutions
+
+### 1. Module Import Error
+
+**Challenge**: 
+Test failures occurred due to module import issues during CI pipeline execution:
+```python
+ModuleNotFoundError: No module named 'app'
+```
+
+**Solution**:
+1. **Directory Structure**:
+```bash
+python-webapp/
+├── app/
+│   ├── __init__.py
+│   └── app.py
+├── tests/
+│   ├── __init__.py
+│   └── test_app.py
+└── requirements.txt
+```
+
+2. **PYTHONPATH Configuration**:
+```yaml
+# filepath: .github/workflows/cicd.yml
+- name: Set Python Path
+  run: |
+    echo "PYTHONPATH=$PYTHONPATH:${{ github.workspace }}" >> $GITHUB_ENV
+```
+
+3. **Test Configuration**:
+```python
+# filepath: tests/test_app.py
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+```
+
+### 2. Email Notifications
+
+**Challenge**: 
+Gmail SMTP authentication failures when sending deployment notifications.
+
+**Solution**:
+1. **App-specific Password Setup**:
+```yaml
+# filepath: .github/workflows/cicd.yml
+- name: Send Email Notification
+  env:
+    SMTP_SERVER: smtp.gmail.com
+    SMTP_PORT: 587
+    SMTP_USERNAME: ${{ secrets.GMAIL_USERNAME }}
+    SMTP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+  run: |
+    python ./scripts/send_notification.py
+```
+
+2. **Alternative GitHub Notifications**:
+```yaml
+  - name: Send deployment status email
+          uses: dawidd6/action-send-mail@v3
+          with:
+              server_address: smtp.gmail.com
+              server_port: 465
+              username: ${{ secrets.EMAIL_USERNAME }}
+              password: ${{ secrets.EMAIL_PASSWORD }}
+              subject: "🚀 Deployment Status: ${{ steps.deployment_status.conclusion }}"
+              to: "devopssre5@gmail.com"
+              from: GitHub Actions
+              body: |
+                Hello,
+                
+                Deployment for *${{ github.repository }}* on commit ${{ github.sha }} has finished.
+                Status: **${{ job.status }}**
+
+                Application is running successfully!.
+
+                Triggered by: ${{ github.actor }}
+
+```
+
+### 3. Docker Security
+
+**Challenge**: 
+Container vulnerability scan revealed multiple security issues.
+
+**Solution**:
+1. **Trivy Scanning Implementation**:
+```yaml
+# filepath: .github/workflows/cicd.yml
+- name: Run Trivy vulnerability scanner
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: '${{ secrets.DOCKER_USERNAME }}/python-webapp:${{ github.sha }}'
+    format: 'table'
+    exit-code: '1'
+    ignore-unfixed: true
+    severity: 'CRITICAL,HIGH'
+```
+
+2. **Minimal Base Image**:
+```dockerfile
+# filepath: Dockerfile
+FROM python:3.9-slim-buster as builder
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM gcr.io/distroless/python3
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /app
+COPY . .
+USER nonroot
+CMD ["python", "app.py"]
+```
+
+3. **Automated Dependencies Update**:
+```yaml
+# filepath: .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "security"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+```
+
+### Best Practices Implemented:
+1. Use of multi-stage builds to reduce image size
+2. Regular security scanning in CI pipeline
+3. Automated dependency updates
+4. Principle of least privilege (nonroot user)
+5. Vulnerability management workflow
 
 
 
+# CI/CD Pipeline Architecture
 
-👉 Key Learning: Small permission/config issues can block automation pipelines, but once solved, they strengthen the overall DevOps workflow.
+```mermaid
+%%{init: {
+  'theme': 'neutral',
+  'themeVariables': {
+    'fontFamily': 'arial',
+    'fontSize': '16px',
+    'primaryColor': '#1f77b4',
+    'primaryTextColor': '#fff',
+    'primaryBorderColor': '#123752',
+    'lineColor': '#123752',
+    'secondaryColor': '#4a90e2',
+    'tertiaryColor': '#6cc04a'
+  }
+}}%%
 
+flowchart TB
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef pipeline fill:#e1f3fe,stroke:#1f77b4,stroke-width:2px;
+    classDef security fill:#fff3e0,stroke:#ff9800,stroke-width:2px;
+    classDef deployment fill:#e8f5e9,stroke:#4caf50,stroke-width:2px;
 
+    subgraph IDE["Development Environment"]
+        DEV[Developer] --> |Git Push| REPO[GitHub Repository]
+    end
+
+    subgraph CI["Continuous Integration"]
+        direction TB
+        REPO --> PIPE[GitHub Actions Pipeline]
+        
+        subgraph Quality["Quality Gates"]
+            direction LR
+            LINT[Ruff Linter] --> 
+            TEST[Unit Tests] -->
+            COV[Coverage Check]
+        end
+
+        subgraph Security["Security Checks"]
+            direction LR
+            GITLEAKS[Gitleaks] -->
+            CODEQL[CodeQL Analysis] -->
+            TRIVY[Trivy Scanner]
+        end
+    end
+
+    subgraph CD["Continuous Deployment"]
+        direction TB
+        DHUB[Docker Hub] --> 
+        DEPLOY[Deploy Container] -->
+        HEALTH[Health Check] -->
+        NOTIFY[Status Notification]
+    end
+
+    PIPE --> Quality
+    Quality --> Security
+    Security --> CD
+
+    class IDE,CI,CD default;
+    class Quality,Security pipeline;
+    class GITLEAKS,CODEQL,TRIVY security;
+    class DHUB,DEPLOY,HEALTH,NOTIFY deployment;
