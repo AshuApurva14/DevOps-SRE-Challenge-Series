@@ -210,32 +210,65 @@
 
 [cicd.yaml](https://github.com/AshuApurva14/season2-snake_game/blob/main/.github/workflows/cicd.yaml)
 
+ <img width="3168" height="1502" alt="cicd" src="https://github.com/user-attachments/assets/c19e9c5d-840f-44b4-95d4-5ba51c181cab" />
+
+
 *This CICD workflow has following steps:*
 
 
 
   - Lint using ruff
+
+      <img width="3180" height="1432" alt="lint" src="https://github.com/user-attachments/assets/6129bc5f-455f-4419-93e1-00a88d3c54a8" />
+
+
   - Secret_scanning using gitleaks
+
+      <img width="3200" height="1744" alt="Secret_scanning" src="https://github.com/user-attachments/assets/35bf4f9e-da49-4043-abe7-1575c4827845" />
+
   - Code_analysis using SonarQube
+
   - Automated testing using pytest
+
   - Docker imagde build using docker
+
+    <img width="3188" height="1600" alt="Imge_build" src="https://github.com/user-attachments/assets/ae7abba0-3134-4118-a4d1-ea14fa1c962b" />
+
   - Image Vulnerability Scanning using Aqua Trivy
+
+    <img width="3176" height="1264" alt="trivy" src="https://github.com/user-attachments/assets/9686b69b-535e-4293-bb17-af2e48087bca" />
+
   - Push docker ige to DockerHub
+
+    <img width="3182" height="1318" alt="dockerhub" src="https://github.com/user-attachments/assets/d0b3d491-deb3-47ff-a3c5-6813c06ffbe9" />
+
   - Set image tag for deployment
+
   - Deploy the application in GitHub RUnner
+
+    <img width="3166" height="1668" alt="Image_pull&deploy" src="https://github.com/user-attachments/assets/a75f36b5-79e2-4c8e-92f9-9119f3a8c271" />
+
   - Check and verify the application Health
+
+    <img width="3194" height="1258" alt="app_health_check" src="https://github.com/user-attachments/assets/4cf754ed-eadb-4672-9aa6-d48aa5938e48" />
+
   - Send and Email notifictaion for deployment status
+
+     <img width="2710" height="810" alt="notify" src="https://github.com/user-attachments/assets/0b2ba6fc-0f81-47cb-a775-c25c86f1e6b2" />
+
+     <img width="3184" height="956" alt="mail_confirm" src="https://github.com/user-attachments/assets/5ea7367c-b537-42c1-ba51-546b14ba1681" />
   
 
-  <img width="3168" height="1502" alt="cicd" src="https://github.com/user-attachments/assets/c19e9c5d-840f-44b4-95d4-5ba51c181cab" />
+
+
+3. **Snake Game** in Browser
+
+    <img width="3190" height="1897" alt="Snake_Game" src="https://github.com/user-attachments/assets/fda24544-fb04-4a30-a83b-6ed3484534f2" />
 
 
 
+### **🧠Learnings and Challenges🛠️ faced.**
 
- 
-
-
-  ### Issue
 
   docker permission issue
 
