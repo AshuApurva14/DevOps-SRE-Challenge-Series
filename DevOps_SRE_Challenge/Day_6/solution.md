@@ -198,13 +198,32 @@
 
 **For deployment of Snake Game in GitHub Runner, following prequisites needs to be fulfilled:
 
-1. Install **Docker** on your EC2 instance:
+1. Install **Docker** on your EC2 instance and configure:
+
 ```bash
    sudo apt update
    sudo apt install docker.io -y
 ```
+ **To run Docker without root privileges, see Run the Docker daemon as a non-root user (Rootless mode).**
+
+  - To create the docker group and add your user.
+    ```bash
+     sudo sudo groupadd docker
+    ```
+
+  - Create the docker group.
+    ```bash
+    sudo groupadd docker
+    ```
+  - Add your user to the docker group.
+    ```bash
+    sudo usermod -aG docker $USER
+    ```
+
 
   <img width="2768" height="770" alt="docker" src="https://github.com/user-attachments/assets/44149866-ceb3-4add-b36f-a0a6fff998ed" />
+
+---
 
 2.For deployment of Snake Game in GitHub Runner, I created GitHub actions workflows file name *cicd.yaml* file under path *.github/workflows* in the Snake Game Repo.
 
@@ -269,11 +288,49 @@
 
 ### **🧠Learnings and Challenges🛠️ faced.**
 
+🔹 Docker Permission Issue
 
-  docker permission issue
+Faced: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock.
 
-  sonarqube analysis issue
+Reason: My user wasn’t added to the docker group.
+
+Fix:
+```bash
+sudo groupadd docker          # create group if not exists
+sudo usermod -aG docker $USER # add current user
+newgrp docker                 # refresh group
+```
+
+✅ After this, I could run Docker commands without sudo.
+
+
+---
+
+🔹 SonarQube Analysis Issue
+
+Used SonarQube CLI (sonar-scanner) for static code analysis.
+
+Issue: Authentication & config mismatches during CI/CD run.
+
+Fix:
+
+Generated a token from SonarQube dashboard.
+
+Passed it as secret in GitHub Actions:
+```bash
+- name: SonarQube Scan
+  run: sonar-scanner \
+    -Dsonar.projectKey=my-project \
+    -Dsonar.sources=. \
+    -Dsonar.host.url=http://localhost:9000 \
+    -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+```
+
+✅ This resolved the analysis issue, and reports were successfully uploaded to SonarQube.
 
 
 
-  
+
+👉 Key Learning: Small permission/config issues can block automation pipelines, but once solved, they strengthen the overall DevOps workflow.
+
+
