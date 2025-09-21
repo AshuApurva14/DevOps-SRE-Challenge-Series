@@ -99,18 +99,56 @@ Answer these to solidify your understanding:
 #### **Step 1: Launch EC2 Instances with Linux Distros**  
 **Goal:** Deploy three Linux distros on AWS EC2 to explore their differences.  
 1. Log into AWS → EC2 → "Launch Instance."  
-2. Deploy these AMIs (use `t2.micro` for free tier):  
-   - **Ubuntu 22.04 LTS**: Search "Ubuntu 22.04" in AMI catalog.  
-   - **Amazon Linux 2**: Default EC2 option.  
-   - **RHEL 9**: Search "Red Hat Enterprise Linux 9."  
-3. Set up a key pair (e.g., `mykey.pem`).  
-4. Configure security group: Allow port 22 (SSH) from your IP.  
-5. SSH into each:  
-   ```bash
-   ssh -i mykey.pem ubuntu@<public-ip>      # Ubuntu
-   ssh -i mykey.pem ec2-user@<public-ip>    # Amazon Linux
-   ssh -i mykey.pem ec2-user@<public-ip>    # RHEL
 
+2. Select the AMIs (use `t2.micro` for free tier) to launch the below mentioned distro based EC2 instance:  
+   - **Ubuntu 22.04 LTS**: Search "Ubuntu 22.04" in AMI catalog.  
+
+       <img width="1816" height="1188" alt="UbuntuAMI" src="https://github.com/user-attachments/assets/1002e35d-7735-4d00-937e-35a79a827654" />
+
+      <img width="3186" height="1730" alt="Ubuntu_ec2" src="https://github.com/user-attachments/assets/c4e8ffe9-eacb-4b79-9678-8673b81db112" />
+
+
+    - **Amazon Linux 2**: Default EC2 option.  
+
+      <img width="1768" height="1114" alt="AMI-Amazon" src="https://github.com/user-attachments/assets/0844e098-fa9d-4d91-bbbf-c246946c435d" />
+
+      <img width="3221" height="1684" alt="amazon" src="https://github.com/user-attachments/assets/5d11287e-993f-455f-9f23-b9ac05f0dfe0" />
+
+
+    - **RHEL 9**: Search "Red Hat Enterprise Linux 9."  
+
+
+      <img width="1799" height="1136" alt="Rhel_AMI" src="https://github.com/user-attachments/assets/311a4615-07f7-45d9-9355-db3a8528cbba" />
+
+      <img width="3210" height="1640" alt="rhel" src="https://github.com/user-attachments/assets/8be96b7f-8c2a-4d54-93e0-eddd0e85a054" />
+    
+
+3. Set up a key pair (e.g., `mykey.pem`).  
+
+4. Configure security group: Allow port 22 (SSH) from your IP. 
+
+    - **Ubuntu 22.04 LTS**: 
+
+      <img width="3200" height="1549" alt="ubuntu_ec2" src="https://github.com/user-attachments/assets/1f72ebb5-a254-484e-982f-5d76b7530408" />
+
+    
+    - **Amazon Linux 2**: Default EC2 option.  
+
+
+      <img width="3200" height="1414" alt="Amazon_sg" src="https://github.com/user-attachments/assets/193bd1f9-014e-4f98-aae9-52d77fb1a0be" />
+
+
+     - **RHEL 9**: Search "Red Hat Enterprise Linux 9."  
+
+       
+       <img width="3235" height="1300" alt="rhelsg" src="https://github.com/user-attachments/assets/9887772f-7a59-4797-8679-6ac84b8efa6b" />
+
+
+    
+5. Now you have the new  different Linux based distro EC2 instance running in your dashboard.
+
+5. For SSH into VM , I have used Putty since I am a Windows user. Below are the step for SSH into EC2 instance.
+  
 ### Connect via PuTTY (Windows)
 
 **Step-by-step:**
