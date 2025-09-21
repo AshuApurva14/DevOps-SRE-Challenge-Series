@@ -148,6 +148,8 @@ Answer these to solidify your understanding:
 5. Now you have the new  different Linux based distro EC2 instance running in your dashboard.
 
 
+   <img width="3200" height="1402" alt="Image" src="https://github.com/user-attachments/assets/3d861df3-0221-45d5-8a9d-6d34864e2220" />
+
   
 ### SSH via PuTTY (Windows)
 
