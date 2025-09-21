@@ -147,28 +147,42 @@ Answer these to solidify your understanding:
     
 5. Now you have the new  different Linux based distro EC2 instance running in your dashboard.
 
-5. For SSH into VM , I have used Putty since I am a Windows user. Below are the step for SSH into EC2 instance.
+
   
-### Connect via PuTTY (Windows)
+### SSH via PuTTY (Windows)
+
+For SSH into VM , I have used Putty since I am a Windows user. Below are the step for SSH into EC2 instance.
 
 **Step-by-step:**
 
-1. **Install [PuTTY and PuTTYgen](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)**  
+1. **Installed [PuTTY and PuTTYgen](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)**  
    Download and install both tools on your Windows machine.
 
-2. **Convert `.pem` to `.ppk` using PuTTYgen**  
+
+2. **Converted `.pem` to `.ppk` using PuTTYgen**  
    - Open **PuTTYgen**
-   - Click **"Load"** and select your `mykey.pem` file  
+   - Click **"Load"** and select your `k8s-key.pem` file  
    - Click **"Save private key"**  
    - Save it as `mykey.ppk` (you can skip the passphrase if not required)
 
+
+     <img width="1200" height="912" alt="puttygen" src="https://github.com/user-attachments/assets/fc69a979-4955-4477-a75b-f3cadb853b3f" />
+
 3. **Open PuTTY and configure connection**  
-   - In **Host Name**, enter:  
+
+   Open putty and add details for hostname and username under session category:
+  
+      <img width="904" height="858" alt="putty" src="https://github.com/user-attachments/assets/a1f75f09-1720-41d3-a8b1-d47df3b55c72" />
+
+   All three different linux distro have different login username mentioned below:
+
      ```
      ubuntu@<public-ip>       # For Ubuntu  
      ec2-user@<public-ip>     # For Amazon Linux / RHEL
+
      ```
-   - **Port:** `22`  
+   - Add the **Port:** `22`  
+
    - In the left panel, go to:  
      `Connection` → `SSH` → `Auth`  
      - Click **Browse**, and attach your `mykey.ppk` file
@@ -178,64 +192,74 @@ Answer these to solidify your understanding:
    - Accept any security alert
    - You should now be logged into your EC2 instance 🎉
 
+    <img width="904" height="850" alt="Putty" src="https://github.com/user-attachments/assets/16544b97-fc40-4b6d-a544-352a22ecccaa" />
+
+
 **You are now connected to your VM via PuTTY!**
 
-
-6. Run this on each:  
+ 
+6. After login into VM run thie below command on ecah of the distro to check the Operating system related information:  
    ```bash
    cat /etc/os-release
 
+ - For **Ubuntu 22.04 LTS**, I have executed above command got below details for Ubuntu OS :
+
+   - **After Login**
+
+     <img width="3194" height="1888" alt="Ubuntu_putty" src="https://github.com/user-attachments/assets/13a734ce-4575-4b69-80f0-8a9de61ee5f7" />
+
+   - Executed **/etc/os-release** command:
+
+     <img width="3200" height="1150" alt="os-releae_ubuntu" src="https://github.com/user-attachments/assets/0b3a98e7-4f51-4857-a93f-08a9cc04ea39" />
+
+   - Execuetd **uname -r** to check kernel version:
+
+     <img width="3200" height="954" alt="uname-r " src="https://github.com/user-attachments/assets/21fd1c03-a658-4d19-8267-805ebdb5e6a0" />
+
+
+   - **Bonus Task**
+
+    For ubuntu OS , I have installed htop(Human readable format verison of TOP ) a process management utlity for better visiblity of processes running on system
+
+     <img width="3200" height="984" alt="Image" src="https://github.com/user-attachments/assets/a2e4f36d-545e-46a0-8809-d663b1c5da1e" />
+
+   - **Below screenshot is showing all the running processes in human reddable format**
+
+     <img width="3200" height="1906" alt="Image" src="https://github.com/user-attachments/assets/6694f15b-5fdf-4ed0-80a7-9d05eb3ae614" />
+
 ---
 
-### Repeat the Same on Azure & GCP
+
+   - For **Amazon Linux 2**, I have executed above command got below details for Amaazon Linux OS :
+
+   - **After Login**
+   - Executed **/etc/os-release** command:
+
+     <img width="3200" height="1216" alt="Iamazon" src="https://github.com/user-attachments/assets/bbf370a2-3f8f-4b06-b01b-a54238fec2db" />
+
+   - Execuetd **uname -r** to check kernel version:
+
+   <img width="3200" height="604" alt="Image" src="https://github.com/user-attachments/assets/83e267ac-1999-4c47-91aa-777ca6cb29a6" /> 
+
+
 
 ---
 
-#### **Azure – Launch a Linux VM**
 
-1. Go to **[Azure Portal](https://portal.azure.com)** → `Virtual Machines` → **Create VM**
-2. Choose your desired Linux distribution:
-   - Ubuntu  
-   - RHEL  
-   - CentOS
-3. For free-tier eligible setup:
-   - **Size:** `Standard_B1s`
-4. **Authentication type:**  
-   - Select **SSH public key**
-   - Upload or generate a new key pair
-5. Under **Networking**, open **Port 22 (SSH)**
-6. Click **Review + Create**, then **Create**
+  - For **RHEL 9**, I have executed above command got below details for RHEL9  OS :
 
-**Connect Options:**  
-- Use Azure Cloud Shell's SSH option  
-- Or use **PuTTY / terminal** with your `.pem` or converted `.ppk` key (same as AWS SSH steps)
+   - **After Login**
+   - Executed **/etc/os-release** command:
+
+      <img width="3200" height="1488" alt="Image" src="https://github.com/user-attachments/assets/dd48c2d2-1873-4fd9-b6b0-ae812877c922" />
+
+   - Execuetd **uname -r** to check kernel version:
+
+     <img width="3200" height="686" alt="Image" src="https://github.com/user-attachments/assets/292ed18b-5f70-4ed6-9149-feadbe454a16" 
 
 ---
 
-#### **GCP – Launch a Linux VM (Compute Engine)**
-
-1. Go to **[GCP Console](https://console.cloud.google.com)** → `Compute Engine` → `VM Instances` → **Create Instance**
-2. Select your preferred OS:
-   - Ubuntu  
-   - RHEL  
-   - Debian
-3. Choose machine type:
-   - **e2-micro** (Free tier eligible)
-4. Scroll to **Security** section:
-   - Add your **SSH public key**
-5. Under **Firewall**, check:
-   - ✅ Allow HTTP traffic  
-   - ✅ Allow SSH traffic
-6. Click **Create**
-
-**Connect Options:**  
-- Use GCP’s built-in browser-based SSH  
-- Or use **external SSH client / PuTTY**:
-   ```bash
-   ssh -i your-key.pem username@<external-ip>
-
-
-**Troubleshooting Tip:** SSH failing? Double-check your security group and key permissions (`chmod 400 mykey.pem`).
+**Troubleshooting Tip:** SSH failing? Double-check your security group and key permissions (`chmod 400 ssh.pem`).
 
 ---
 
@@ -246,13 +270,40 @@ Answer these to solidify your understanding:
 - VirtualBox: [virtualbox.org](https://www.virtualbox.org)  
 - RHEL ISO: [redhat.com](https://developers.redhat.com/products/rhel/download) (free developer account).  
 
-1. Open VirtualBox → "New" → Name: "RHEL9" → Type: Linux → Version: Red Hat (64-bit).  
-2. Allocate:  
-   - RAM: 2 GB+  
-   - Disk: 20 GB+ (dynamic)  
-3. Mount the RHEL ISO in Settings → Storage.  
+1. Open VirtualBox and add all required deatils such as:
+
+    - Name: "RHEL9" 
+    - Type: Linux  #Automatically added
+    - Version: Red Hat (64-bit).   #Automatically added
+    - ISO image
+    - Username and Password
+    - Virtual Hardware specification (Allocate:   RAM: 2 GB+ , Disk: 20 GB+ (dynamic))
+    - Virtual hard disk specification
+
+
+   <img width="1608" height="1114" alt="Image" src="https://github.com/user-attachments/assets/115baa28-cada-494d-afd4-45c1576e819c" />
+
 4. Start the VM and follow the installer (default settings are fine).  
+
 5. Post-install, log in and run:  
    ```bash
    sudo dnf update -y
    cat /etc/os-release
+
+
+<img width="3190" height="1914" alt="Image" src="https://github.com/user-attachments/assets/6b59fa48-5aa0-4bed-8b81-5db2f4c94cbd" />
+
+
+<img width="3200" height="1900" alt="Image" src="https://github.com/user-attachments/assets/5f808971-6559-41f4-8e99-38b9b4b61391" />
+
+
+## **Challenged Faced**
+
+  - **VirtualBox** RHEL9 VM installation errors
+
+    - I have reinstalled the iso image version and reconfigured it by ensuring every details and prequisite must be met.
+
+
+## **Key Takeaways**
+
+  - Ensure all settings and key configurations must be set properly for successfull execution of setup.
