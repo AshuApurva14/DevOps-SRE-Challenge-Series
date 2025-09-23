@@ -257,7 +257,7 @@ For SSH into VM , I have used Putty since I am a Windows user. Below are the ste
 
    - Execuetd **uname -r** to check kernel version:
 
-     <img width="3200" height="686" alt="Image" src="https://github.com/user-attachments/assets/292ed18b-5f70-4ed6-9149-feadbe454a16" 
+      <img width="3200" height="686" alt="Image" src="https://github.com/user-attachments/assets/292ed18b-5f70-4ed6-9149-feadbe454a16" />
 
 ---
 
