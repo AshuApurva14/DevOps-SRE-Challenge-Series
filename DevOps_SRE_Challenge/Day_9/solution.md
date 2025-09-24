@@ -68,7 +68,66 @@ ls: cannot access 'file-not-found': No such file or directory
 
 
 3. Why does `myscript` fail but `./myscript` work?  
-4. How does `history -c; history -w` differ from `history -c` alone?  
-5. Why is `/etc/motd` useful for admins but not GUI users?  
+
+   **Why myscript fail?**
+
+   - The file `myscript` execution fail because system could able to find the executable file, as it is not in the current directory or the System PATH enviornment variable.
+  
+   **Why ./myscript works**
+
+   - Current Directory Specification: The ./ (dot slash) is a shorthand that explicitly tells your operating system to look for the executable file in the current directory.
+
+   - Direct Execution: This tells the system, "Look in the directory I am currently in for a file named myscript and run it".
 
 ---
+
+4. How does `history -c; history -w` differ from `history -c` alone?  
+
+   **The primary difference between history -c and history -cw is that -c only clears the command history from the current shell's memory, while -cw clears it from both memory and the history file on disk.**
+
+
+---
+
+5. Why is `/etc/motd` useful for admins but not GUI users? 
+
+  - The /etc/motd (message of the day) file is useful for system administrators but not for graphical user interface (GUI) users because it is displayed only when a user logs in via a text-based interface, such as a terminal or SSH.
+  -  A typical GUI session, which bypasses the standard login shell, does not display these messages to the end-user. 
+
+---
+
+### **⚙️ Practical Challenge: Shell Skills in Action**  
+
+
+#### **Step 1: Shell & Redirection on EC2 Instances**  
+**Goal:** Master commands and I/O on Day 1 EC2s (Ubuntu, Amazon Linux, RHEL). 
+
+1. SSH into EC2 instance(created previously on Day 8)
+
+   After Login into each of the  3 EC2 instances, run the below commands:
+```bash
+type ls                   # Alias or binary?
+ls -l /etc > out.txt      # Redirect STDOUT
+ls nofile 2> err.txt      # Redirect STDERR
+cat out.txt err.txt > combined.txt 2>&1  # Merge outputs
+echo "Host: $(hostname)" >> combined.txt  # Append
+ls -R / | grep "bin" | less  # Pipe chain
+history -d 2              # Delete 2nd command
+
+```
+
+   - Let's execute in **Ubuntu 22.04 LTS Distro:**
+
+   <img width="3192" height="444" alt="ubuntu_shell" src="https://github.com/user-attachments/assets/fdf90e6a-cfdd-4e85-b6e7-f936300693e6" />
+
+   - **After execution of above comamnds, 3 files gets created: out.txt, err.txt and combined.txt**
+
+   - **cat combined.txt**
+
+   <img width="3200" height="1904" alt="ubuntu_combined.txt" src="https://github.com/user-attachments/assets/471a0c4c-7afe-41d5-8bcb-8c67e01dbdd5" />
+
+
+   - 
+
+
+
+
