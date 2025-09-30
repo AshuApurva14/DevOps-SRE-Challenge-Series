@@ -45,6 +45,39 @@ EOF
 ---
 
 
+### 3. Log Simulation: The Enemy's Activity
+
+* Let's simulate enemy activity by creating fake logs. The logs directory will track their actions.
+
+```bash
+mkdir ~/textlab/logs
+echo "error: disk full. System compromised!" > ~/textlab/logs/log1.log
+echo "ERROR: network down. Communications disrupted!" > ~/textlab/logs/log2.log
+echo "warning: low memory. System stability threatened!" >  ~/textlab/logs/log3.log
+# Make log1.log larger than 1MB to simulate a real log.
+for i in {1..10000}; do echo "filler line $i" >> ~/textlab/logs/log1.log; done
+```
+<img width="3088" height="720" alt="task3" src="https://github.com/user-attachments/assets/58821a1e-ec79-4f99-9b3b-73e8e1131e73" />
+
+---
+
+### 4. System Check
+
+* Before I begin, I have ensured the necessary tools and access.
+    * I should be able to read system files like `/etc/passwd` and `/var/log/messages` (some tasks might require sudo).
+    * I have installed `mailx` for communication tasks:
+
+```bash
+sudo dnf install mailx # Or sudo apt install mailutils on Debian/Ubuntu
+```
+
+<img width="3140" height="1020" alt="Image" src="https://github.com/user-attachments/assets/ac7d23a7-d255-4df7-870b-8d9bc2cd621d" />
+
+<img width="3200" height="630" alt="Image" src="https://github.com/user-attachments/assets/c8b326a0-351d-4571-ae0f-9877f7363049" />
+
+---
+
+
 
 
 
