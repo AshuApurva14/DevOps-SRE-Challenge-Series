@@ -1,7 +1,7 @@
 #  My Solution of Day 11 - DevOps/SRE Challenge Series
 ---
 
-- Today's challenge is totally based on linux filesystem operations to test my hands on + theoritical knowledge. 
+- Today's challenge is totally based on linux filesystem operations(Text file, Logs file, troubleshooting and filtering) to test my hands on + theoritical knowledge. 
 
 - This challenge allows to simulate real world task/operations handled by DevOps/SRE Engineers which gives a good amount of real experience.
 
