@@ -1,421 +1,441 @@
 # Daily DevOps + SRE Challenge Series – Season 2
-## Day 13: Secure Shell Mastery – SSH, SCP, Hardening & Troubleshooting Like a Pro
+## Day 12: The Process Power-Up – Command Your Linux System Like a Pro
 
 ### Introduction
-Welcome to **Day 13** of the Daily DevOps + SRE Challenge Series – Season 2! 🔐
+Welcome to **Day 12** of the Daily DevOps + SRE Challenge Series – Season 2! 🎉
 
-Today, you’ll master secure remote access and file transfer with **SSH** and **SCP**. You’ll also learn to harden servers, move beyond passwords to keys, and troubleshoot failures like an SRE under pressure. SSH is the backbone of Linux administration, CI/CD deploys, remote debugging, and automated operations.
-Fun fact, Google ask these questions for the Cloud Engineer role.
-
-By the end of today, you’ll confidently connect, transfer files safely, lock down your servers, and fix tricky login issues fast.
+Today, you’re stepping into the control room of your Linux system, mastering the art of **process management**. Processes are the heartbeat of any system—every command, script, or service runs as a process. Knowing how to monitor, prioritize, and control them is like wielding a superpower for debugging, optimizing, and keeping systems humming. By the end of this challenge, you’ll:
+- Monitor running processes with precision using tools like `ps` and `top`.
+- Control process priorities to optimize system performance.
+- Manage background jobs and terminate rogue processes like a seasoned SRE.
 
 #### Why This Matters?
-- **Security**: SSH done wrong is an open door. Harden it to reduce risk.
-- **Reliability**: Key-based access avoids password lockouts and human error.
-- **Scale**: Client and server configs let you manage fleets and bastions cleanly.
-- **Incident Response**: During outages, fast, correct SSH troubleshooting is vital.
-- **Interview Win**: “How do you harden sshd?” and “Why key-based auth?” are common.
-- **Real-World Impact**: Disabling password logins and enforcing keys can reduce SSH-related incidents dramatically.
+Process management is critical for DevOps and SRE roles:
+- **System Health**: Spot CPU-hogging processes before they crash your app.
+- **Automation**: Script `kill` or `nice` commands to automate resource management.
+- **Outage Recovery**: During incidents, `top` and `pkill` help you isolate and stop problematic services.
+- **Interview Win**: Questions like “How do you find a zombie process?” or “What’s the difference between `SIGTERM` and `SIGKILL`?” are common.
+- **Real-World Impact**: An SRE at a fintech firm used `htop` to trace a memory leak in a trading app, saving millions by preventing downtime.
+
+Grab your terminal and let’s power up your process-fu!
 
 ---
 
-### 1. Understanding SSH
-- **Definition**: SSH (Secure Shell) is a protocol for secure remote login, command execution, and tunneling over untrusted networks.
-- **How it stays secure**:
-  - Host keys: Identify the server; clients cache fingerprints in `~/.ssh/known_hosts`.
-  - Key exchange + ciphers: Negotiate an encrypted session (confidentiality + integrity).
-  - Authentication: Password, public key, or other methods (e.g., MFA).
-- **Common use cases**:
-  - Admin access: `ssh user@server`
-  - Remote commands: `ssh user@server "systemctl status nginx"`
-  - File transfers: `scp`, `sftp`, `rsync -e ssh`
-  - Port forwarding and tunneling
-- **Ports**: Default server port is 22. Many orgs change it (e.g., 2222) and update firewalls accordingly.
+### 1. Understanding Processes
+- **Definition**: A process is an instance of a running program, identified by a unique **Process ID (PID)**. Every command (e.g., `ls`), script, or service (e.g., `httpd`) creates a process.
+- **Attributes**:
+  - **PID**: Unique identifier (e.g., 1234).
+  - **PPID**: Parent Process ID, linking to the process that started it (e.g., `bash` spawns `ls`).
+  - **User**: The account running the process (e.g., `root` or `user1`).
+  - **State**: Current status:
+    - **R** (Running): Actively using CPU.
+    - **S** (Sleeping): Waiting for an event (e.g., I/O).
+    - **D** (Uninterruptible Sleep): Waiting for I/O, can’t be killed easily.
+    - **Z** (Zombie): Defunct, awaiting parent cleanup.
+    - **T** (Stopped): Paused, often via `Ctrl+Z`.
+- **Types**:
+  - **Foreground**: Occupies the terminal (e.g., `vim`).
+  - **Background**: Runs without terminal control (e.g., `sleep 100 &`).
+  - **Daemons**: System services running continuously (e.g., `sshd`).
+- **Process Creation**: Processes are forked (copied) from a parent, often `init` (PID 1) or `systemd` in RHEL.
 
----
+### 2. Monitoring Processes
+To manage processes, you first need to see what’s running. RHEL provides several tools for this purpose.
 
-### 2. Connecting with SSH
-Basic commands:
+- **`ps` (Process Status)**:
+  - Displays a snapshot of processes.
+  - **Key Options**:
+  - `-a`: Show all processes with a terminal (excludes daemons).
+  - `-u user`: Filter by user (e.g., `ps -u root`).
+  - `-x`: Include processes without a terminal (e.g., daemons).
+  - `aux`: BSD-style, shows all processes (user, PID, %CPU, %MEM, command).
+  - `-e`: Show every process (System V style).
+  - `-f`: Full format (includes PPID, start time).
+  - `-ef`: Combines `-e` and `-f` for hierarchy view.
+  - `-p PID`: Select specific PID (e.g., `ps -p 1234`).
+  - `-C command`: Select by command name (e.g., `ps -C httpd`).
+  - `--sort=field`: Sort output (e.g., `ps aux --sort=-%cpu` for highest CPU first).
+  - `-o field1,field2`: Customize columns (e.g., `ps -o pid,comm,state`).
+  - `-l`: Long format (includes nice value, priority).
+  - Common options:
+    - `ps aux`: Shows all processes in BSD format (user, PID, %CPU, %MEM, command).
+    - `ps -ef`: Displays all processes in System V format, including PPID.
+    - `ps -u username`: Lists processes for a specific user.
+    - `ps -p 1234`: Shows details for PID 1234.
+  - Example:
+    ```bash
+    ps aux | grep httpd
+    ```
+    Lists all `httpd` processes with resource usage.
+  - **Customization**: Use `ps -o pid,ppid,comm,state` to select specific columns (PID, PPID, command, state).
+
+- **`top`**:
+  - Real-time, interactive process viewer.
+  - Key features:
+    - Displays CPU, memory, and load averages.
+    - Sort by CPU (`P`), memory (`M`), or PID (`N`).
+    - Kill processes: Press `k`, enter PID, select signal (e.g., 15 for `SIGTERM`).
+    - Adjust priority: Press `r`, enter PID, set nice value.
+  - Example:
+    ```bash
+    top
+    ```
+    Press `q` to quit.
+  - **Fields**:
+    - `%CPU`: CPU usage percentage.
+    - `%MEM`: Memory usage percentage.
+    - `NI`: Nice value (priority).
+    - `S`: Process state (R, S, Z, etc.).
+  
+- **`uptime`**:
+  - Shows system load averages (1, 5, 15 minutes).
+  - Example:
+    ```bash
+    uptime
+    ```
+    Output: `12:34:56 up 2 days, 3:45, 2 users, load average: 0.50, 0.75, 1.00`.
+  - **Interpretation**: A load average above the number of CPU cores indicates resource contention.
+
+### 3. Controlling Processes with Signals
+Processes communicate via **signals**, which instruct them to perform actions like stopping or restarting.
+
+- **Common Signals**:
+  - `SIGTERM` (15): Requests graceful termination (default for `kill`).
+  - `SIGKILL` (9): Forces immediate termination (use cautiously, as it doesn’t allow cleanup).
+  - `SIGHUP` (1): Reloads configuration for daemons (e.g., `kill -1 1234`).
+  - `SIGSTOP` (19): Pauses a process (resumed with `SIGCONT`).
+  - `SIGCONT` (18): Resumes a paused process.
+- **Commands**:
+  - **`kill`**: Sends a signal to a PID.
+    ```bash
+    kill -15 1234  # Graceful stop
+    kill -9 1234   # Force kill
+    ```
+  - **`killall`**: Sends a signal to all processes matching a name.
+    ```bash
+    killall -15 httpd  # Stops all httpd processes
+    ```
+  - **`pkill`**: Similar to `killall`, but supports patterns.
+    ```bash
+    pkill -u user1  # Terminates all processes for user1
+    ```
+
+### 4. Managing Process Priorities
+CPU resources are allocated based on process priority, controlled by **nice** values (-20 highest, +19 lowest).
+
+- **`nice`**:
+  - Sets priority when starting a process.
+  - Example:
+    ```bash
+    nice -n 10 sleep 1000  # Runs with low priority
+    ```
+  - Range: `-20` (high priority) to `+19` (low priority, default 0).
+
+- **`renice`**:
+  - Adjusts priority of a running process.
+  - Example:
+    ```bash
+    renice 5 -p 1234  # Sets nice value to 5 for PID 1234
+    ```
+  - Requires `root` for increasing priority (lowering nice value below 0).
+
+- **Verification**:
+  - Check nice value with `ps -l` (column `NI`) or `top` (press `f`, select `NI`).
+  - Example:
+    ```bash
+    ps -lp 1234
+    ```
+
+### 5. Job Control
+Job control manages foreground and background processes within a terminal session.
+
+- **Foreground Processes**:
+  - Run interactively, locking the terminal (e.g., `vim`).
+- **Background Processes**:
+  - Run without terminal control, freeing it for other tasks.
+  - Start with `&`:
+    ```bash
+    sleep 1000 &
+    ```
+- **Key Commands**:
+  - **`jobs`**: Lists background/stopped jobs.
+    ```bash
+    jobs
+    ```
+    Output: `[1]+ Running sleep 1000 &`.
+  - **`fg`**: Brings a job to the foreground.
+    ```bash
+    fg %1  # Brings job 1 to  foreground
+    ```
+  - **`bg`**: Resumes a stopped job in the background.
+    ```bash
+    bg %1
+    ```
+  - **Suspend**: Press `Ctrl+Z` to pause a foreground process.
+  - **Terminate**: Use `Ctrl+C` to stop a foreground process.
+
+- **Example Workflow**:
+  ```bash
+  sleep 1000    # Runs in foreground
+  Ctrl+Z        # Suspends
+  jobs          # Shows [1]+ Stopped
+  bg %1         # Resumes in background
+  fg %1         # Brings back to foreground
+  Ctrl+C        # Terminates
+  ```
+
+### 6. Advanced Monitoring Tools
+For deeper insights, RHEL offers additional tools.
+
+- **`pidstat`** (part of `sysstat` package):
+  - Monitors CPU, memory, or I/O per process.
+  - Example:
+    ```bash
+    pidstat -u 1 5  # CPU usage every second for 5 iterations
+    ```
+- **`lsof`**:
+  - Lists open files associated with a process.
+  - Example:
+    ```bash
+    lsof -p 1234  # Files opened by PID 1234
+    ```
+- **`free`**:
+  - Shows system memory usage, useful alongside `top` for memory-intensive processes.
+    ```bash
+    free -h
+    ```
+
+### 7. Process Troubleshooting
+- **High CPU Usage**:
+  - Use `top` or `ps aux --sort=-%cpu` to identify culprits.
+  - Lower priority with `renice` or terminate with `kill`.
+- **Zombies**:
+  - Find with `ps aux | grep Z`.
+  - Kill parent process to clean up (e.g., `kill -9 <PPID>`).
+- **Out-of-Memory Issues**:
+  - Check `free -h` and `top` (%MEM column).
+  - Terminate non-critical processes or adjust `nice` values.
+
+### 8. Systemd and Processes
+- Processes like `httpd` or `sshd` are managed by `systemd` units.
+- Check service processes:
+  ```bash
+  systemctl status httpd
+  ```
+  Shows main PID and recent logs.
+- Stop a service to kill its processes:
+  ```bash
+  systemctl stop httpd
+  ```
+
+## Practical Tasks: Operation Server Rescue: Diagnose, Stabilize, and Optimize
+As an SRE on call, your task is to diagnose, stabilize, and optimize a production server under heavy load from rogue processes. This guide assumes a Fedora or RHEL system.
+
+### Setup the Crisis
+
+1. **Create a Workspace**:
+
 ```bash
-# Default port
-ssh user@hostname
-
-# Specify identity key
-ssh -i ~/.ssh/id_ed25519 user@hostname
-
-# Non-default port
-ssh -p 2222 user@hostname
-
-# Run a one-off command
-ssh user@hostname "uptime && whoami"
+mkdir ~/processlab
+cd ~/processlab
 ```
 
-Helpful client options:
-- `-vvv`: Verbose output for troubleshooting (negotiation, auth)
-- `-o StrictHostKeyChecking=ask`: Safer first-connection behavior
-- `-J bastion`: ProxyJump via bastion (multi-hop)
-- ControlMaster/ControlPersist: Multiplex connections for faster repeated SSH
+2. **Simulate Server Stress**:
+    - **CPU-intensive script**:
 
----
-
-### 3. Secure File Transfers: SCP, SFTP, and rsync over SSH
-SCP and SFTP both run over SSH (encrypted end-to-end). Modern OpenSSH may implement `scp` via SFTP.
-
-SCP examples:
 ```bash
-# Upload a file
-scp ./app.tar.gz user@server:/opt/releases/
-
-# Download a file
-scp user@server:/var/log/nginx/access.log ./logs/
-
-# Recursive copy (directory)
-scp -r ./static/ user@server:/var/www/static/
-
-# Non-default port
-scp -P 2222 ./file.txt user@server:/tmp/
+echo 'while true; do :; done' &gt; cpu_hog.sh
+chmod +x cpu_hog.sh
 ```
 
-SFTP (interactive or batch):
+    - **Memory-heavy script**:
+
 ```bash
-sftp -P 2222 -i ~/.ssh/id_ed25519 user@server
-sftp> put file.txt /opt/data/
-sftp> get /opt/data/file.txt
+echo 'python3 -c "while True: a = [0] * 1000000"' &gt; mem_hog.sh
+chmod +x mem_hog.sh
 ```
 
-rsync over SSH (efficient sync with deltas):
+    - **Sleep script**:
+
 ```bash
-rsync -az --progress -e "ssh -p 2222 -i ~/.ssh/id_ed25519" ./site/ user@server:/var/www/site/
+echo 'sleep 3600' &gt; sleeper.sh
+chmod +x sleeper.sh
 ```
 
-Integrity verification:
+3. **Install Tools (if needed)**:
+
 ```bash
-sha256sum file.txt
-ssh user@server "sha256sum /opt/data/file.txt"
+sudo dnf install python3 procps-ng sysstat
 ```
 
----
 
-### 4. How SSH Works (Mermaid Diagram)
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
+### Task: Stabilize the Server
 
-    Client->>Server: Initiates TCP connection on port 22
-    Server->>Client: Sends SSH version and server public key
-    Client->>Server: Negotiates encryption + session key
-    Client->>Server: Sends authentication request (password or key)
-    alt Password Auth
-        Client->>Server: Sends username + password
-        Server->>Server: Verifies credentials
-    else Public Key Auth
-        Client->>Server: Proves possession of private key (signs challenge)
-        Server->>Server: Verifies using authorized_keys
-    end
-    Server-->>Client: Authentication success/failure
-    Client->>Server: Opens shell session or executes command
-```
+#### Assess the Load
 
----
+1. **Check Load Averages**:
+Run `uptime` to check load averages and save output to `~/processlab/load.txt`.
 
-### 5. How SCP Works (Mermaid Diagram)
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
-
-    Client->>Server: Establish SSH connection (port 22)
-    Client->>Server: Sends SCP command (upload/download)
-    Server->>Client: Responds with SCP process
-    Client->>Server: Transfers file chunks (encrypted)
-    Server->>Client: Sends ACK after completion
-    Note over Client,Server: Entire session is encrypted with SSH
-```
-
----
-
-### 6. sshd_config Essentials (Server)
-Key directives in `/etc/ssh/sshd_config`:
-- `Port 2222`: Change from 22 (remember to open firewall)
-- `PermitRootLogin no`: Disable direct root login
-- `PasswordAuthentication no`: Enforce key-based auth
-- `PubkeyAuthentication yes`: Enable key auth
-- `MaxAuthTries 3`: Throttle brute-force attempts
-- `PermitEmptyPasswords no`: Disallow empty passwords
-- `AllowUsers devops_user`: Restrict to allowed accounts (or `AllowGroups`)
-- `ClientAliveInterval 300` + `ClientAliveCountMax 2`: Idle session control
-- `LogLevel VERBOSE`: Better audit logs
-- Optionally harden crypto (modern OpenSSH defaults are strong):
-  - `KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org`
-  - `Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com`
-  - `MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com`
-
-Validate and apply:
 ```bash
-sudo sshd -t                   # syntax check
-sudo sshd -T | sort            # effective config
-sudo systemctl reload sshd     # safer than restart
+uptime &gt; ~/processlab/load.txt
 ```
 
----
+2. **Note CPU Cores**:
+Use `lscpu` to note the number of CPU cores and save to `~/processlab/cpu_info.txt`.
 
-### 7. Passwordless Access & Key Management
-Generate a key pair (ed25519 recommended):
 ```bash
-ssh-keygen -t ed25519 -C "you@example.com"
+lscpu &gt; ~/processlab/cpu_info.txt
 ```
 
-Install your public key:
+3. **Compare Load to Cores**:
+High load (>2 on 2 cores) confirms stress.
+
+#### Survey Running Processes
+
+1. **List All Processes**:
+List all processes with `ps aux`, pipe to `less` for paging, and save to `~/processlab/all_processes.txt`.
+
 ```bash
-ssh-copy-id user@server
-# or manual:
-cat ~/.ssh/id_ed25519.pub | ssh user@server 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
+ps aux &gt; ~/processlab/all_processes.txt
 ```
 
-Login:
+2. **List Processes Sorted by User**:
+Append the list of processes sorted by user to `~/processlab/all_processes.txt`.
+
 ```bash
-ssh user@server
+ps aux --sort=user &gt;&gt; ~/processlab/all_processes.txt
 ```
 
-Permissions (avoid auth failures):
+3. **Show Custom Columns**:
+Show custom columns (PID, user, group, VSZ, RSS, command) with `ps -e -o pid,user,group,vsz,rss,comm` and save to `~/processlab/custom_processes.txt`.
+
 ```bash
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/id_ed25519 ~/.ssh/authorized_keys
+ps -e -o pid,user,group,vsz,rss,comm &gt; ~/processlab/custom_processes.txt
 ```
 
-Use `ssh-agent` to cache decrypted keys:
+
+#### Launch Rogue Processes
+
+1. **Start Background Jobs**:
+
 ```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+./cpu_hog.sh &amp;
+./mem_hog.sh &amp;
+./sleeper.sh &amp;
 ```
 
-Tips:
-- Use `IdentitiesOnly yes` per host to avoid “Too many authentication failures”
-- Always protect private keys with a passphrase and store backups securely
+2. **Start a Foreground Job**:
 
----
-
-### 8. Server Hardening Simulation
-🔴 Buggy server config (for lab):
-- `PermitRootLogin yes`
-- `PasswordAuthentication yes`
-- Weak password
-
-⚡ Exploit demonstration (lab-only):
 ```bash
-hydra -l root -P rockyou.txt ssh://server-ip
+./cpu_hog.sh
 ```
 
-🟢 Hardened fix:
-- `PermitRootLogin no`
-- `PasswordAuthentication no`
-- `PubkeyAuthentication yes`
-- `AllowUsers devops_user`
-- Change port (e.g., 2222) & update firewall rules
+Suspend it with `Ctrl+Z`.
 
-UFW example:
+#### Manage Jobs
+
+1. **List Jobs**:
+Run `jobs` to list all jobs (expect 3 running, 1 stopped).
+2. **Resume Stopped Job**:
+Resume the stopped `cpu_hog.sh` job in the background with `bg`.
+3. **Bring Job to Foreground and Terminate**:
+Bring the first `sleeper.sh` job to the foreground with `fg %1`, then terminate it with `Ctrl+C`.
+4. **Confirm Job Removal**:
+Check `jobs` to confirm `sleeper.sh` is gone.
+
+#### Monitor in Real-Time
+
+1. **Run Top**:
+Run `top`, sort by CPU (P), then memory (M).
+2. **Identify mem_hog.sh PID**:
+Identify the `mem_hog.sh` PID (high `%MEM`).
+3. **Terminate mem_hog.sh**:
+In `top`, press `k`, enter the `mem_hog.sh` PID, and send `SIGTERM` (15) to stop it gracefully.
+4. **Quit Top**:
+Quit `top` with `q`.
+
+#### Adjust Priorities
+
+1. **Find PID of cpu_hog.sh**:
+Find the PID of one `cpu_hog.sh` with `ps aux | grep cpu_hog`.
+2. **Set Nice Value to +5**:
+
 ```bash
-sudo ufw allow 2222/tcp
-sudo ufw delete allow 22/tcp
-sudo ufw reload
+renice 5 -p &lt;PID&gt;
 ```
 
-firewalld example:
+3. **Increase Priority to -5**:
+
 ```bash
-sudo firewall-cmd --add-port=2222/tcp --permanent
-sudo firewall-cmd --remove-service=ssh --permanent
-sudo firewall-cmd --reload
+sudo renice -5 -p &lt;PID&gt;
 ```
 
----
+4. **Verify Priority Change**:
+Verify with `ps -lp &lt;PID&gt;` (check NI column). Save output to `~/processlab/priority.txt`.
 
-### 9. Troubleshooting – Google-Style
-1) Client-Side
-- Correct command: `ssh -i key.pem -p 2222 user@ip`
-- Debug with `ssh -vvv`
-- Key file permissions:
 ```bash
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/id_* ~/.ssh/authorized_keys
+ps -lp &lt;PID&gt; &gt; ~/processlab/priority.txt
 ```
 
-2) Network
-- Reachability and port:
+
+#### Trace Process Hierarchy
+
+1. **Show Process Hierarchy**:
+Run `ps fax | grep -B5 cpu_hog` to show `cpu_hog.sh` processes and their parent shell.
+2. **Save Hierarchy**:
+Save output to `~/processlab/hierarchy.txt`.
+
 ```bash
-ping -c 2 ip || true
-nc -zv ip 2222
+ps fax | grep -B5 cpu_hog &gt; ~/processlab/hierarchy.txt
 ```
-- Firewall/security group rules (local + cloud)
 
-3) Server
-- Service and port:
+
+#### Clean Up Stragglers
+
+1. **Start Another Rogue Process**:
+From a second terminal, start another rogue process:
+
 ```bash
-sudo systemctl status sshd
-sudo ss -tulpn | grep -E ':(22|2222)\s'
+./cpu_hog.sh &amp;
+exit
 ```
-- Config validation:
+
+2. **Confirm Process Running**:
+Back in the first terminal, use `ps aux | grep cpu_hog` to confirm it’s still running.
+3. **Terminate All cpu_hog.sh Processes**:
+
 ```bash
-sudo sshd -t
-sudo sshd -T | sort
+killall -15 cpu_hog.sh
 ```
 
-4) Authentication
-- User exists and has valid shell
-- `~/.ssh` ownership and modes; `authorized_keys` present
-- `AllowUsers/AllowGroups` not blocking login
+4. **Verify Termination**:
+Verify with `ps aux | grep cpu_hog` (no results).
 
-5) Logs
-- Debian/Ubuntu: `/var/log/auth.log`
-- RHEL/CentOS/Fedora: `/var/log/secure`
-- Journal: `sudo journalctl -u sshd -e`
+#### Final Sweep
 
-6) Cloud-Specific
-- AWS: Default usernames (`ec2-user`, `ubuntu`, etc.), SG inbound 2222/tcp, PEM permissions
-- GCP: OS Login/IAM bindings; project-level keys
-- Azure: NSGs; Just-In-Time access
+1. **Check Load Again**:
+Check load again with `uptime`. Append to `~/processlab/load.txt`.
 
-7) Edge Cases
-- Fail2ban blocking IP (unban via `fail2ban-client`)
-- Host key mismatch (fix `~/.ssh/known_hosts`)
-- SELinux enforcing (check AVC denials; `restorecon -Rv /etc/ssh` after changes)
-
----
-
-### 10. Troubleshooting Flow (Mermaid Diagram)
-```mermaid
-flowchart TD
-    A[SSH Fails] --> B[Check Client Command]
-    B -->|Wrong user/IP/key| FixClient
-    B --> C[Enable ssh -vvv debug]
-
-    C --> D[Network Reachable?]
-    D -->|No| FixNetwork
-    D -->|Yes| E[Is Port Open?]
-
-    E -->|No| FixFirewall
-    E -->|Yes| F[Is sshd Running?]
-
-    F -->|No| RestartService
-    F -->|Yes| G[Check sshd_config]
-
-    G --> H[Auth Issues?]
-    H -->|Key mismatch| FixKeys
-    H -->|User restricted| UpdateAllowUsers
-
-    G --> I[Check Logs]
-    I -->|Errors Found| FixConfig
-    I -->|Cloud Issue| CheckIAM
-
-    I --> J[Still Broken?]
-    J --> Escalate
-```
-
----
-
-## Practical Tasks: Operation Secure Access – Harden, Validate, and Recover
-As an SRE, your job is to enable secure, reliable access while minimizing risk. This lab uses Ubuntu/Debian or RHEL/Fedora. Keep a second console open before changing SSH.
-
-### Setup Prep
-1. Create a workspace:
 ```bash
-mkdir -p ~/ssh-lab && cd ~/ssh-lab
-```
-2. Confirm current connectivity:
-```bash
-ssh user@server "whoami && hostname"
+uptime &gt;&gt; ~/processlab/load.txt
 ```
 
-### Task A: Establish Key-Based Login
-1. Generate key (if needed):
-```bash
-ssh-keygen -t ed25519 -C "you@example.com"
-```
-2. Install your public key:
-```bash
-ssh-copy-id user@server
-```
-3. Verify:
-```bash
-ssh -vvv user@server "echo OK && id -u && hostname"
-```
-4. Save the line showing “Authentication succeeded (publickey)” to `notes.md`.
+2. **Force-Stop Remaining Processes**:
+If load is still high, use `killall -9 sleeper.sh` to force-stop any remaining processes.
+3. **Save Final Processes**:
+Save final `ps aux` output to `~/processlab/final_processes.txt`.
 
-### Task B: Harden sshd
-1. Open firewall for new port (2222 shown below).
-2. Edit `/etc/ssh/sshd_config` to include:
-```
-Port 2222
-PermitRootLogin no
-PasswordAuthentication no
-PubkeyAuthentication yes
-AllowUsers user
-MaxAuthTries 3
-PermitEmptyPasswords no
-ClientAliveInterval 300
-ClientAliveCountMax 2
-LogLevel VERBOSE
-```
-3. Validate and reload:
 ```bash
-sudo sshd -t && sudo systemctl reload sshd
-```
-4. Test new port:
-```bash
-ssh -p 2222 user@server "echo PORT_OK"
-```
-5. Remove old port (only after verifying new):
-- UFW: `sudo ufw delete allow 22/tcp`
-- firewalld: `sudo firewall-cmd --remove-service=ssh --permanent && sudo firewall-cmd --reload`
-
-Document all commands + outputs in `notes.md`.
-
-### Task C: Secure File Transfer Roundtrip
-1. Create a file and upload/download:
-```bash
-echo "hello-ssh" > hello.txt
-scp -P 2222 hello.txt user@server:/tmp/hello.txt
-scp -P 2222 user@server:/tmp/hello.txt hello.remote.txt
-```
-2. Verify integrity:
-```bash
-sha256sum hello.txt hello.remote.txt | tee checksums.txt
+ps aux &gt; ~/processlab/final_processes.txt
 ```
 
-### Task D (Optional): SFTP-Only Restricted User
-1. Create group and user (server):
-```bash
-sudo groupadd -f sftpusers
-sudo useradd -m -G sftpusers -s /usr/sbin/nologin sftpuser
-```
-2. Prepare chroot:
-```bash
-sudo mkdir -p /sftp/sftpuser/upload
-sudo chown root:root /sftp /sftp/sftpuser
-sudo chmod 755 /sftp /sftp/sftpuser
-sudo chown sftpuser:sftpusers /sftp/sftpuser/upload
-```
-3. Add to `/etc/ssh/sshd_config`:
-```
-Subsystem sftp internal-sftp
-Match Group sftpusers
-    ChrootDirectory /sftp/%u
-    ForceCommand internal-sftp
-    AllowTCPForwarding no
-    X11Forwarding no
-```
-4. Validate + reload, then test:
-```bash
-sudo sshd -t && sudo systemctl reload sshd
-ssh -p 2222 sftpuser@server   # should fail (no shell)
-sftp -P 2222 sftpuser@server  # should succeed
-```
 
-### Task E: Induce and Fix Failures (Troubleshooting)
-Pick at least one, capture `ssh -vvv` and server logs, and document your fix:
-- Wrong key permissions: fix with `chmod 600 ~/.ssh/id_*`
-- Blocked port: fix firewall rules and retest with `nc -zv`
-- Misconfigured `AllowUsers`: correct user and reload
-- Host key mismatch: remove offending line in `~/.ssh/known_hosts`
+#### Document Findings
 
----
+In `~/processlab/notes.txt`, document:
+
+- Which process caused the most stress (`cpu_hog.sh` or `mem_hog.sh`).
+- How load changed after cleanup.
+- One lesson learned (e.g., “`SIGTERM` is safer than `SIGKILL`”).
+
+
