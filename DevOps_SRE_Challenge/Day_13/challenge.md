@@ -1,4 +1,6 @@
 # Daily DevOps + SRE Challenge Series – Season 2
+
+
 ## Day 13: Secure Shell Mastery – SSH, SCP, Hardening & Troubleshooting Like a Pro
 
 ### Introduction
@@ -419,10 +421,4 @@ Pick at least one, capture `ssh -vvv` and server logs, and document your fix:
 - Host key mismatch: remove offending line in `~/.ssh/known_hosts`
 
 ---
-
-## Key Takeaways
-
-- Ensure all the ssh configs settings must be properly enabled and disabled.
-- Keep the default settings as it is.As, modification of any such configs lead to unexpected behaviour.
-
 
