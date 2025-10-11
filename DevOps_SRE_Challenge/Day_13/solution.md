@@ -8,37 +8,30 @@ For this lab I have used Ubuntu based machine. All the task has been completed o
 
 
 ### Setup Prep
-1. Create a workspace:
+1. I have created a workspace:
 ```bash
 mkdir -p ~/ssh-lab && cd ~/ssh-lab
 ```
-
 <img width="2768" height="472" alt="Image" src="https://github.com/user-attachments/assets/02ecbb78-2f19-4bab-854d-67e4e13d9670" />
 
-2. Confirm current connectivity:
-```bash
-ssh ubuntu@15.206.80.5 "whoami && hostname"
-```
-<img width="2762" height="220" alt="Image" src="https://github.com/user-attachments/assets/ca7a4de4-c648-44d0-8bc7-03c91cdb65f7" />
-
 ---
-
+ 
 ### Task A: Key-Based Login 
-1. I have Generated key with below commands tobe used for ssh connectivity:
+1. I have Generated key with below commands to be used for ssh connectivity:
 ```bash
 ssh-keygen -t ed25519 -C "devopssre@gmail.com"
 ```
 
 <img width="2690" height="724" alt="Image" src="https://github.com/user-attachments/assets/6809bd5b-c291-4fad-82e9-b1eda2e33dcc" />
 
-2. Install your public key:
+2. Thereafter, I have added the public key:
 ```bash
 
 cat ~/.ssh/id_ed25519.pub | ssh -i aws-key.pem ubuntu@15.206.80.5 'chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
 ```
 <img width="2764" height="168" alt="Image" src="https://github.com/user-attachments/assets/4bd791a3-e8ff-4abe-90bf-6a7922cd34bc" />
 
-3. Verify:
+3. I verified the connection:
 ```bash
 ssh -vvv ubuntu@15.206.80.5 "echo OK && id -u && hostname"
 ```
@@ -47,7 +40,7 @@ ssh -vvv ubuntu@15.206.80.5 "echo OK && id -u && hostname"
 
 ---
 
-4.  “Authentication succeeded (publickey)” to notes.md
+4.  Authentication verfication done “Authentication succeeded (publickey)”
 
 <img width="2324" height="124" alt="Image" src="https://github.com/user-attachments/assets/1ea7f6e4-4504-4952-90a7-1cb68b8847ef" />
 
@@ -55,9 +48,12 @@ ssh -vvv ubuntu@15.206.80.5 "echo OK && id -u && hostname"
 
 ### Task B: Harden sshd
 
-1. Open firewall for new port (2222 shown below).
+For this task, I have opened FW needs to be for AWS EC2 instance.
 
-2. Edit `/etc/ssh/sshd_config` to include:
+1. Opened firewall for new port (2222 shown below).
+
+
+2. EditED `/etc/ssh/sshd_config` to include:
 ```
 Port 2222
 PermitRootLogin no
@@ -72,19 +68,19 @@ LogLevel VERBOSE
 ```
 <img width="2884" height="1704" alt="Image" src="https://github.com/user-attachments/assets/91cd802c-239d-43dd-a14e-39f61bc34203" />
 
-3. Validate and reload:
+3. then Validated and reloaded:
 ```bash
 sudo sshd -t && sudo systemctl reload sshd
 ```
 <img width="2888" height="1136" alt="Image" src="https://github.com/user-attachments/assets/8a13398e-27e3-45d8-a3ad-762dc2668119" />
 
-4. Test new port:
+4. Now, I Tested new port:
 ```bash
 ssh -p 2222 user@server "echo PORT_OK"
 ```
 <img width="2882" height="1146" alt="Image" src="https://github.com/user-attachments/assets/c939c80a-d4a7-4295-9234-5fb9fc2f4264" />
 
-5. Remove old port (only after verifying new):
+5. I have Removed old port (only after verifying new):
 - UFW: `sudo ufw delete allow 22/tcp`
 - firewalld: `sudo firewall-cmd --remove-service=ssh --permanent && sudo firewall-cmd --reload`
 
@@ -92,16 +88,14 @@ ssh -p 2222 user@server "echo PORT_OK"
 
 ---
 
-Document all commands + outputs in `notes.md`.
-
 ### Task C: Secure File Transfer Roundtrip
-1. Create a file and upload/download:
+1. I Created a file and uploaded/downloaded:
 ```bash
 echo "hello-ssh" > hello.txt
 scp -P 2222 hello.txt user@server:/tmp/hello.txt
 scp -P 2222 user@server:/tmp/hello.txt hello.remote.txt
 ```
-2. Verify integrity:
+2. I have verified the integrity:
 ```bash
 sha256sum hello.txt hello.remote.txt | tee checksums.txt
 ```
@@ -109,14 +103,5 @@ sha256sum hello.txt hello.remote.txt | tee checksums.txt
 
 ---
 
-
-### Task E: Induce and Fix Failures (Troubleshooting)
-Pick at least one, capture `ssh -vvv` and server logs, and document your fix:
-- Wrong key permissions: fix with `chmod 600 ~/.ssh/id_*`
-- Blocked port: fix firewall rules and retest with `nc -zv`
-- Misconfigured `AllowUsers`: correct user and reload
-- Host key mismatch: remove offending line in `~/.ssh/known_hosts`
-
----
 
 
