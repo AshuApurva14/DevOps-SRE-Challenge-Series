@@ -48,12 +48,12 @@ ssh -vvv ubuntu@15.206.80.5 "echo OK && id -u && hostname"
 
 ### Task B: Harden sshd
 
-For this task, I have opened FW needs to be for AWS EC2 instance.
+For this task, I have opened FW needs to be for AWS EC2 instance in the Security groups.
 
 1. Opened firewall for new port (2222 shown below).
 
 
-2. EditED `/etc/ssh/sshd_config` to include:
+2. Edited `/etc/ssh/sshd_config` to include:
 ```
 Port 2222
 PermitRootLogin no
@@ -68,19 +68,19 @@ LogLevel VERBOSE
 ```
 <img width="2884" height="1704" alt="Image" src="https://github.com/user-attachments/assets/91cd802c-239d-43dd-a14e-39f61bc34203" />
 
-3. then Validated and reloaded:
+3. then Validated and reloaded with below commands:
 ```bash
 sudo sshd -t && sudo systemctl reload sshd
 ```
 <img width="2888" height="1136" alt="Image" src="https://github.com/user-attachments/assets/8a13398e-27e3-45d8-a3ad-762dc2668119" />
 
-4. Now, I Tested new port:
+4. Then, I Tested the connection over port 2222:
 ```bash
 ssh -p 2222 user@server "echo PORT_OK"
 ```
 <img width="2882" height="1146" alt="Image" src="https://github.com/user-attachments/assets/c939c80a-d4a7-4295-9234-5fb9fc2f4264" />
 
-5. I have Removed old port (only after verifying new):
+5.Now, it is time to Remove old port (only after verifying new):
 - UFW: `sudo ufw delete allow 22/tcp`
 - firewalld: `sudo firewall-cmd --remove-service=ssh --permanent && sudo firewall-cmd --reload`
 
@@ -103,5 +103,7 @@ sha256sum hello.txt hello.remote.txt | tee checksums.txt
 
 ---
 
+## Key Takeaways
 
-
+- Ensure correct access and permissions are granted for successfull execution of above mentioned steps.
+- For SSH connection to be successful, proper key configuration must be done.
