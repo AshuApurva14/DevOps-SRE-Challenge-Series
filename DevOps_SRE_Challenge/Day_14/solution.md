@@ -3,6 +3,7 @@
 
 ## Solution for Day 14 Challenge
 ---
+This challenge is all about solving scenarios based on user, group creations and permissions.It tests your knowledge on user management skills in linux.
 
 ###  Practical Scenarios
 
