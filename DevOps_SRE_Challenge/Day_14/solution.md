@@ -187,3 +187,8 @@ I have created a troubleshooting scenario by removing execution permission from 
 
 ## Key Takeaways
 
+- It is important to ensure files and directories must be granted with proper access and permissions.
+
+- The  principle of *Least Privelege** access and permissions must be follwed for users and groups.
+
+- For more secure environments must ensure security audits on regular basis.
