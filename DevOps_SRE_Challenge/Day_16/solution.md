@@ -72,6 +72,13 @@ You have two cloud VMs in the same subnet. They cannot ping each other.
 
     <img width="2396" height="1286" alt="Image" src="https://github.com/user-attachments/assets/3c3a301d-5b52-467f-a660-3388ad140228" />
 
+
+After, enabiling ICMP Rule in both VMs security group, `ping` started to work.
+
+<img width="1960" height="696" alt="Image" src="https://github.com/user-attachments/assets/2c1fb782-6f47-43ea-8ef2-a42637df71a0" />
+
+<img width="1988" height="716" alt="Image" src="https://github.com/user-attachments/assets/69b89066-831f-48e1-90d4-d3874dff72fc" />
+
 ---
 
 ### C. VirtualBox Scenario
