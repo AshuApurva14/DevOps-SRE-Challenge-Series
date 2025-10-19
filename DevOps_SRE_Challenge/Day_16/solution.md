@@ -9,15 +9,13 @@
 
 ### A. Local or VM Interface Basics
 
+I have tested and executed the below comamnd in my local to check how network interface and MAC address looks like.
+
 1. **List all interfaces & MAC addresses**
     ```bash
     ip link show
     ```
-    - Primary network interface and note its MAC.
-
-    
-
-    
+    - Below you can see how the network interface and MAC address looks like:
 
 2. **Is your interface up?**
     ```bash
@@ -34,6 +32,8 @@
     ```
     - Look for dropped or error packets.
 
+<img width="2304" height="874" alt="Image" src="https://github.com/user-attachments/assets/2f30c16c-e513-486e-8725-b43481f7577b" />
+
 ---
 
 ### B. Cloud Scenario: AWS/GCP/Azure
@@ -48,12 +48,15 @@ You have two cloud VMs in the same subnet. They cannot ping each other.
 1. What might cause this in cloud environments? (Hint: Security Groups, NACLs, subnet config, ENI not attached)
 
     - It is due to Security group does not have ICMP rule allowed in both the Cloud VMs.
+
 ---
 
 2. What console/CLI checks should you try?
 
     - First, I will check the Security group rules for the both the VMs, if ICMP rule is allowed or not.
     - If the rules are not added then I will add ICMP rule (IP of one VM into other security group and vice-versa) in the security group of both the VMs.
+
+  <img width="3205" height="844" alt="Image" src="https://github.com/user-attachments/assets/a6b95a1a-fa93-4a42-8e47-822229374f69" />
 
 ---
 
@@ -66,6 +69,8 @@ You have two cloud VMs in the same subnet. They cannot ping each other.
 
      ip link show <interface>
     ``` 
+
+    <img width="2396" height="1286" alt="Image" src="https://github.com/user-attachments/assets/3c3a301d-5b52-467f-a660-3388ad140228" />
 
 ---
 
