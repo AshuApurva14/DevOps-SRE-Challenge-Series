@@ -44,6 +44,9 @@ You have two cloud VMs in the same subnet. They cannot ping each other.
 - Both have unique MAC addresses.
 - ARP tables on both show the other’s IP as “INCOMPLETE”.
 
+Below screenshot can help you understand the problem statement easliy.
+
+
 **Questions:**  
 1. What might cause this in cloud environments? (Hint: Security Groups, NACLs, subnet config, ENI not attached)
 
