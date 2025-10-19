@@ -90,8 +90,31 @@ You clone a VM in VirtualBox, but networking is broken:
 
 **Questions:**  
 1. What Layer 1/2 issues can happen when cloning a VM?
+
+    - Cloning VM can lead to Layer 1/2 issues related to duplicate hardware identifier and network configurations.
+    - Below are the list of common issue occurs while cloning:
+
+      - Duplicate MAC Addresses
+      - Duplicate IP Addresses
+      - Linux network interface renaming
+      - Windows System Identifier (SID) and KMS issue.
+
+    
 2. How can you fix these in VirtualBox settings and on the VM?
+
+   - To fix **Duplicate MAC Address** issue, I will generate a new MAC.
+   - Remove and Readd the vNIC.
+
+   - To fix **Duplicate IP Address**issue, I will first used DHCP and manually reconfigure network settings.
+   
+
 3. What commands would you use to verify?
+   
+   To verify below commands can be used:
+
+   - Check MAC address `ip link show`.
+   - Check network interface status `ip addr show`
+   
 
 ---
 
@@ -127,9 +150,85 @@ $ ip neigh show
 10.10.10.1 dev eth0 INCOMPLETE
 ```
 
-**Your tasks:**
+**Hands-on tasks:**
 1. What does the ARP entry “INCOMPLETE” mean?
+
+    - The ARP entry "INCOMPLETE" means the VM has sent an ARP request for IP Address 10.10.10.1 which is its gateway.
+    - But has not yet received a reply with the corresponding MAC Address.
+    - The system puts this entry in its ARP cache as a placeholder and will repeatedly re-send the ARP request until it receives a response or times out.
+  
+
 2. List two possible causes for this on physical, VirtualBox, or cloud VMs.
+
+   Below are the two possible cause:
+
+    1. Network device or connectivity issue (Physical/Virtual Layer 1 or 2)
+        - Physical or Virtual NIC Failure
+        - Switch Configuration error
+        - External gateway or firewall error
+
+    2. Incorrect network configuration (Virtual Layer 2 or 3)
+
+        - IP address misconfigurations
+        - Misconfigured virtual network
+
 3. What troubleshooting steps would you take to fix it, layer by layer?
 
+   Troubleshooting steps (Layer-by-layer):
+
+   - Layer 1: Physical and virtual connectivity 
+
+     1. Check VM state: Verify that the VM is powered on and its network adapter is connected in the hypervisor's settings (e.g., VirtualBox, vSphere).
+
+     2. Verify hypervisor network: Check the network configuration on the hypervisor host to ensure the virtual network switch is correctly configured and the VM is attached to the right network.
+
+     3. Inspect switch/port status: Check the status of the physical switch port connected to the hypervisor host. The port status should be "UP/UP".
+
+     4. Confirm VM visibility (cloud): For cloud environments (like Azure, AWS), verify the virtual network interface and associated security group settings in the cloud management console. 
+
+   - Layer 2: Data Link Layer
+
+     1. Check for MAC address conflicts: Ensure no other device on the network has the same IP address (10.10.10.5) or MAC address (52:54:00:ab:cd:ef).
+
+       In a VM clone scenario, this is a common issue. Check the clone's settings to confirm it has a unique MAC address.
+
+     2. Use packet capture (tcpdump): Run tcpdump -i eth0 arp on the VM to see if ARP requests for 10.10.10.1 are being sent out and if any replies are received.
+
+       Run tcpdump on the gateway or an adjacent network device to check if the ARP requests from the VM are arriving and if the ARP replies are being sent back.
+
+     3. Inspect VLAN configuration: If the network uses VLANs, confirm that the VM's virtual network interface and the gateway's interface are on the same VLAN. 
+
+
+   - Layer 3: Network Layer
+
+    1. Check IP and gateway configuration: Verify that the VM's IP address (10.10.10.5) and subnet mask (/24) are correct and that the gateway's IP address (10.10.10.1) is also correct. Check if the gateway is actually configured at 10.10.10.1.
+
+    2. Verify routing table: The ARP INCOMPLETE entry is for the gateway. Check the VM's routing table (ip route show) to ensure the default route points to 10.10.10.1 and that there are no conflicting routes.
+
+    3. Check firewall rules:
+     Inspect firewall rules on the VM (iptables, firewalld) and any external firewalls or security groups (in the case of cloud VMs) to ensure they are not blocking ARP traffic.
+
+    4. Ensure the gateway or other devices on the network are not using ARP attack detection features that are dropping the VM's ARP requests
+
+
+   - Layer 4: Application Layer
+
+    1. Test gateway reachability from another device: From another machine on the same network segment, attempt to ping the gateway (ping 10.10.10.1). If this fails, the issue is with the gateway or the network infrastructure, not the VM.
+
+    2. Reset network interfaces: If the above steps fail, try restarting the VM or restarting the network interfaces.
+   ```bash
+    sudo ip link set dev eth0 down && sudo ip link set dev eth0 up
+
+   ```
+
+    3. For a clone, completely re-adding the network adapter in the hypervisor might be necessary.
+
+
+
 ---
+
+## Key Takeaways
+
+ - Ensure proper network configurations on Physical, Virtual or Cloud based environments.
+ 
+ - It is very crucial to enough resources are available to successfully setup and configure each of network devices physical or virtual.
