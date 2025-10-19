@@ -134,7 +134,9 @@ You clone a VM in VirtualBox, but networking is broken:
 
 ---
 
-## 5. ARP Log Analysis: Mini Incident Simulation
+## ARP Log Analysis: Mini Incident Simulation
+
+A real world incident simuation challenge.
 
 You receive these logs from a VM with network issues:
 
