@@ -14,7 +14,7 @@ Let's solve this guide hands on.
 ### **Step 1: Configure the "Router"**
 On VM1 (`router`):
 ```bash
-sudo ip addr add 192.168.10.1/24 dev eth0
+sudo ip addr add 192.168.10.1/24 dev enp0s3
 sudo ip addr add 192.168.20.1/24 dev eth1
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 ```
