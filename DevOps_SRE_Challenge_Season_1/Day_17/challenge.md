@@ -153,8 +153,8 @@ ping 192.168.20.20
 ```nginx
 http {
     upstream myapp {
-        server 65.1.107.205:8000;
-        server 13.232.120.126:8000;
+        server 13.201.167.136:8000;
+        server 65.1.110.253:8000;
     }
     server {
         listen 80;
