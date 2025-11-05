@@ -74,7 +74,7 @@
 
         SENDER="devopssre5@gmail.com"
         RECEIVER="aapurva74@gmail.com"
-        APP_PASSWORD="crht xoag efdt feib" # Use a Google App Password, not your account password
+        APP_PASSWORD="your gmail app password" # Use a Google App Password, not your account password
         SUBJECT="System Health Report"
         BODY="Please find the latest System Health Report file attached."
         ATTACHMENT="/workspaces/DevOps-SRE-Challenge-Series/DevOps_SRE_Challenge_Season_2/Day_1/report.txt"
