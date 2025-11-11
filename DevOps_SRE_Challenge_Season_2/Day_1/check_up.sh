@@ -59,7 +59,7 @@
 
         cpu_status=$(top -bn1 )
 
-        echo -e "#============================= Current status of CPU =============================# \n\n " >> report.txt
+        echo -e "\n\n #============================= Current status of CPU =============================# \n\n " >> report.txt
 
         echo -e "$cpu_status \n\n" >> report.txt
         
