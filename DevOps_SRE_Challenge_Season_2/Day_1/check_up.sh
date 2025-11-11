@@ -42,7 +42,9 @@
         memory_status=$(free -h)
         
         echo "-------------Memeory Usage Status-----------" >> report.txt
-        echo "$memory_status" >> report.txt
+        echo "$memory_status \n\n" >> report.txt
+
+        
 
         echo -e "#=============================== Current memory status ==========================# \n\n $memory_status \n\n "
 
@@ -57,9 +59,17 @@
 
         cpu_status=$(top -bn1 )
 
-        echo "$cpu_status" >> report.txt
+        echo -e "#============================= Current status of CPU =============================# \n\n " >> report.txt
 
-        echo -e "#============================= Current status of CPU =============================# \n\n $cpu_status \n\n"
+        echo -e "$cpu_status \n\n" >> report.txt
+        
+        echo "CPU Usages check completed" >> report.txt
+        
+    }
+
+    function exit() {
+
+           exit
     }
 
     #------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -74,8 +84,9 @@
 
         SENDER="devopssre5@gmail.com"
         RECEIVER="aapurva74@gmail.com"
-        APP_PASSWORD="your gmail app password" # Use a Google App Password, not your account password
-        SUBJECT="System Health Report"
+        APP_PASSWORD="crht xoag efdt feib" # Use a Google App Password, not your account password
+        CURRENT_DATE_TIME=$(date "+%Y-%m-%d %H:%M:%S")
+        SUBJECT="System Health Report - $CURRENT_DATE_TIME"
         BODY="Please find the latest System Health Report file attached."
         ATTACHMENT="/workspaces/DevOps-SRE-Challenge-Series/DevOps_SRE_Challenge_Season_2/Day_1/report.txt"
 
@@ -109,7 +120,7 @@ try:
     server.login('${SENDER}', '${APP_PASSWORD}')
     server.send_message(msg)
     server.quit()
-    print('Email sent successfully!')
+    print('Email sent successfully!\n\n')
 except Exception as e:
     print(f'Something went wrong: {e}')
 PY
@@ -121,14 +132,15 @@ PY
 
     while true;  do
 
-        echo -e "#---------------- System Health Check -----------------------#\n"
+        echo -e "#=================== System Health Check =======================#\n"
         echo "1. Check Disk Usage"
         echo "2. Monitor Running Processes"
         echo "3. Assess Memory Usage"
         echo "4. Evaluate CPU Usage"
         echo "5. Send a Comprehensive Report over Email"
+        echo "6. Exit"
         
-        echo -e "\n#------------------------------------------------------------#\n\n "
+        echo -e "\n#============================================================#\n\n "
         
 
         read -p "Enter your choice [1:3] " choice_var
@@ -155,6 +167,9 @@ PY
 
             5)
                 send_email
+                ;;
+
+            6)  exit
                 ;;
 
             *)

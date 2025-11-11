@@ -5,3 +5,154 @@ Swap:             0B          0B          0B
                total        used        free      shared  buff/cache   available
 Mem:           7.8Gi       2.2Gi       180Mi        62Mi       5.8Gi       5.6Gi
 Swap:             0B          0B          0B
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   11G   19G  37% /
+tmpfs            64M     0   64M   0% /dev
+shm              64M     0   64M   0% /dev/shm
+/dev/root        29G   22G  7.9G  73% /vscode
+/dev/loop6       32G   11G   19G  37% /workspaces
+/dev/sdb1        44G  2.2G   40G   6% /tmp
+
+"systemd" is not running in this container due to its overhead.
+Use the "service" command to start services instead. e.g.: 
+
+service --status-all
+-------------Memeory Usage Status-----------
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       2.2Gi       201Mi        61Mi       5.8Gi       5.6Gi
+Swap:             0B          0B          0B
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   11G   19G  37% /
+tmpfs            64M     0   64M   0% /dev
+shm              64M     0   64M   0% /dev/shm
+/dev/root        29G   22G  7.9G  73% /vscode
+/dev/loop6       32G   11G   19G  37% /workspaces
+/dev/sdb1        44G  2.2G   40G   6% /tmp
+top - 04:08:57 up 39 min,  0 user,  load average: 0.28, 0.25, 0.34
+Tasks:  20 total,   1 running,  19 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  4.8 us,  9.5 sy,  0.0 ni, 85.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7944.7 total,    215.0 free,   2253.3 used,   5854.1 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   5691.4 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 codespa+  20   0    1136    640    640 S   0.0   0.0   0:00.05 docker-+
+      7 codespa+  20   0    2800   1536   1536 S   0.0   0.0   0:00.30 sh
+     35 root      20   0   12016   2964   1920 S   0.0   0.0   0:00.00 sshd
+     58 root      20   0 1968036  73808  50944 S   0.0   0.9   0:00.31 dockerd
+     73 root      20   0 1727708  48220  33280 S   0.0   0.6   0:00.37 contain+
+    360 codespa+  20   0    2800   1664   1664 S   0.0   0.0   0:00.01 sh
+    390 root      20   0    2800   1792   1792 S   0.0   0.0   0:00.00 sh
+    591 codespa+  20   0    2808   1792   1792 S   0.0   0.0   0:00.00 sh
+    600 codespa+  20   0   11.3g 126832  53120 S   0.0   1.6   0:04.69 node
+    630 codespa+  20   0   63.0g 810704  65920 S   0.0  10.0   0:38.04 node
+    643 codespa+  20   0 1327660  61048  48512 S   0.0   0.8   0:00.33 node
+   1047 codespa+  20   0    5528   4184   3072 S   0.0   0.1   0:00.66 pet
+   1232 codespa+  20   0 1074356  80180  48512 S   0.0   1.0   0:02.38 node
+   1262 codespa+  20   0   16712  12928   3712 S   0.0   0.2   0:00.20 bash
+   1655 codespa+  20   0   15932  12032   3584 S   0.0   0.1   0:00.10 bash
+   2034 codespa+  20   0  360404  55168  12160 S   0.0   0.7   0:01.01 python
+   2109 codespa+  20   0   35744  27500  11264 S   0.0   0.3   0:00.14 python
+  12257 codespa+  20   0    7876   3328   3072 S   0.0   0.0   0:00.00 bash
+  12302 codespa+  20   0    6112   1792   1792 S   0.0   0.0   0:00.00 sleep
+  12303 codespa+  20   0   12364   5248   3200 R   0.0   0.1   0:00.00 top
+#============================= Current status of CPU =============================# 
+
+ 
+top - 04:12:44 up 42 min,  0 user,  load average: 0.22, 0.24, 0.31
+Tasks:  20 total,   1 running,  19 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  5.0 us,  0.0 sy,  0.0 ni, 95.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7944.7 total,    214.2 free,   2244.0 used,   5864.2 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   5700.6 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 codespa+  20   0    1136    640    640 S   0.0   0.0   0:00.05 docker-+
+      7 codespa+  20   0    2800   1536   1536 S   0.0   0.0   0:00.36 sh
+     35 root      20   0   12016   2964   1920 S   0.0   0.0   0:00.00 sshd
+     58 root      20   0 1968036  73808  50944 S   0.0   0.9   0:00.33 dockerd
+     73 root      20   0 1727708  48220  33280 S   0.0   0.6   0:00.41 contain+
+    360 codespa+  20   0    2800   1664   1664 S   0.0   0.0   0:00.01 sh
+    390 root      20   0    2800   1792   1792 S   0.0   0.0   0:00.00 sh
+    591 codespa+  20   0    2808   1792   1792 S   0.0   0.0   0:00.00 sh
+    600 codespa+  20   0   11.3g 127472  53120 S   0.0   1.6   0:05.11 node
+    630 codespa+  20   0   63.1g 814800  65920 S   0.0  10.0   0:43.11 node
+    643 codespa+  20   0 1328684  61304  48512 S   0.0   0.8   0:00.35 node
+   1047 codespa+  20   0    5528   4312   3072 S   0.0   0.1   0:00.68 pet
+   1232 codespa+  20   0 1074868  81076  48640 S   0.0   1.0   0:02.69 node
+   1262 codespa+  20   0   16712  12928   3712 S   0.0   0.2   0:00.21 bash
+   1655 codespa+  20   0   15932  12032   3584 S   0.0   0.1   0:00.10 bash
+   2034 codespa+  20   0  360404  55168  12160 S   0.0   0.7   0:01.01 python
+   2109 codespa+  20   0   35744  27500  11264 S   0.0   0.3   0:00.14 python
+  14063 codespa+  20   0    7876   3456   3200 S   0.0   0.0   0:00.00 bash
+  14101 codespa+  20   0    6112   1920   1920 S   0.0   0.0   0:00.00 sleep
+  14102 codespa+  20   0   12364   5376   3328 R   0.0   0.1   0:00.00 top
+CPU Usages check completed
+#============================= Current status of CPU =============================# 
+
+ 
+top - 04:14:06 up 44 min,  0 user,  load average: 0.11, 0.22, 0.29
+Tasks:  23 total,   1 running,  22 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 25.0 us, 25.0 sy,  0.0 ni, 50.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7944.7 total,    214.2 free,   2239.2 used,   5869.0 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   5705.5 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 codespa+  20   0    1136    640    640 S   0.0   0.0   0:00.05 docker-+
+      7 codespa+  20   0    2800   1536   1536 S   0.0   0.0   0:00.38 sh
+     35 root      20   0   12016   2964   1920 S   0.0   0.0   0:00.00 sshd
+     58 root      20   0 1968036  73808  50944 S   0.0   0.9   0:00.33 dockerd
+     73 root      20   0 1727708  48220  33280 S   0.0   0.6   0:00.43 contain+
+    360 codespa+  20   0    2800   1664   1664 S   0.0   0.0   0:00.01 sh
+    390 root      20   0    2800   1792   1792 S   0.0   0.0   0:00.00 sh
+    591 codespa+  20   0    2808   1792   1792 S   0.0   0.0   0:00.00 sh
+    600 codespa+  20   0   11.3g 127728  53248 S   0.0   1.6   0:05.26 node
+    630 codespa+  20   0   63.1g 814800  65920 S   0.0  10.0   0:44.61 node
+    643 codespa+  20   0 1328684  61304  48512 S   0.0   0.8   0:00.37 node
+   1047 codespa+  20   0    5528   4312   3072 S   0.0   0.1   0:00.69 pet
+   1232 codespa+  20   0 1075380  81460  48640 S   0.0   1.0   0:02.84 node
+   1262 codespa+  20   0   16712  12928   3712 S   0.0   0.2   0:00.22 bash
+   1655 codespa+  20   0   15932  12032   3584 S   0.0   0.1   0:00.10 bash
+   2034 codespa+  20   0  360404  55168  12160 S   0.0   0.7   0:01.01 python
+   2109 codespa+  20   0   35744  27500  11264 S   0.0   0.3   0:00.14 python
+  14845 codespa+  20   0    7876   3456   3200 S   0.0   0.0   0:00.00 bash
+  14857 codespa+  20   0    2804   1792   1792 S   0.0   0.0   0:00.00 sh
+  14858 codespa+  20   0    7876   3328   3072 S   0.0   0.0   0:00.00 cpuUsag+
+  14862 codespa+  20   0    6116   1792   1792 S   0.0   0.0   0:00.00 sleep
+  14863 codespa+  20   0    6112   1792   1792 S   0.0   0.0   0:00.00 sleep
+  14867 codespa+  20   0   12364   5376   3328 R   0.0   0.1   0:00.00 top \n\n
+CPU Usages check completed
+#============================= Current status of CPU =============================# 
+
+ 
+top - 04:14:48 up 45 min,  0 user,  load average: 0.11, 0.20, 0.28
+Tasks:  23 total,   1 running,  22 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  4.8 us,  4.8 sy,  0.0 ni, 90.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7944.7 total,    214.0 free,   2237.4 used,   5871.0 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   5707.3 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 codespa+  20   0    1136    640    640 S   0.0   0.0   0:00.06 docker-+
+      7 codespa+  20   0    2800   1536   1536 S   0.0   0.0   0:00.39 sh
+     35 root      20   0   12016   2964   1920 S   0.0   0.0   0:00.00 sshd
+     58 root      20   0 1968036  73808  50944 S   0.0   0.9   0:00.34 dockerd
+     73 root      20   0 1727708  48220  33280 S   0.0   0.6   0:00.44 contain+
+    360 codespa+  20   0    2800   1664   1664 S   0.0   0.0   0:00.01 sh
+    390 root      20   0    2800   1792   1792 S   0.0   0.0   0:00.00 sh
+    591 codespa+  20   0    2808   1792   1792 S   0.0   0.0   0:00.00 sh
+    600 codespa+  20   0   11.3g 127856  53248 S   0.0   1.6   0:05.33 node
+    630 codespa+  20   0   63.1g 814800  65920 S   0.0  10.0   0:45.28 node
+    643 codespa+  20   0 1328684  61304  48512 S   0.0   0.8   0:00.38 node
+   1047 codespa+  20   0    5528   4312   3072 S   0.0   0.1   0:00.72 pet
+   1232 codespa+  20   0 1075380  81588  48640 S   0.0   1.0   0:02.91 node
+   1262 codespa+  20   0   16712  12928   3712 S   0.0   0.2   0:00.22 bash
+   1655 codespa+  20   0   15932  12032   3584 S   0.0   0.1   0:00.10 bash
+   2034 codespa+  20   0  360404  55168  12160 S   0.0   0.7   0:01.01 python
+   2109 codespa+  20   0   35744  27500  11264 S   0.0   0.3   0:00.14 python
+  15240 codespa+  20   0    7876   3456   3200 S   0.0   0.0   0:00.00 bash
+  15276 codespa+  20   0    2804   1664   1664 S   0.0   0.0   0:00.00 sh
+  15277 codespa+  20   0    7876   3456   3200 S   0.0   0.0   0:00.00 cpuUsag+
+  15281 codespa+  20   0    6116   1792   1792 S   0.0   0.0   0:00.00 sleep
+  15282 codespa+  20   0    6112   1792   1792 S   0.0   0.0   0:00.00 sleep
+  15283 codespa+  20   0   12364   5376   3328 R   0.0   0.1   0:00.00 top 
+
+
+CPU Usages check completed
