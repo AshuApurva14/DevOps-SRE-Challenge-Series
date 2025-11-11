@@ -1,0 +1,84 @@
+
+ #==================================== Disk usage Status ===================================# 
+
+
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   11G   19G  38% /
+tmpfs            64M     0   64M   0% /dev
+shm              64M     0   64M   0% /dev/shm
+/dev/root        29G   22G  7.8G  74% /vscode
+/dev/loop4       32G   11G   19G  38% /workspaces
+/dev/sdc1        44G  2.1G   40G   6% /tmp 
+
+
+Disk usages check completed 
+
+#=============================================================================================# 
+
+
+
+ #=============================== Running Services Status ==================================# 
+
+ 
+
+"systemd" is not running in this container due to its overhead.
+Use the "service" command to start services instead. e.g.: 
+
+service --status-all 
+
+
+Monitor Running Services check completed 
+
+#=============================================================================================# 
+
+
+
+ #================================== Memeory Usage Status ===================================# 
+
+ 
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       2.1Gi       205Mi        61Mi       5.8Gi       5.6Gi
+Swap:             0B          0B          0B 
+
+
+Memory Usages check completed 
+
+#===============================================================================================# 
+
+
+
+ #=================================== CPU usage Status ======================================# 
+
+ 
+top - 17:15:21 up 17 min,  0 user,  load average: 0.16, 0.39, 0.52
+Tasks:  18 total,   1 running,  17 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  4.8 sy,  0.0 ni, 95.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7944.7 total,    205.8 free,   2174.0 used,   5941.4 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   5770.7 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 codespa+  20   0    1136    640    640 S   0.0   0.0   0:00.03 docker-+
+      7 codespa+  20   0    2800   1536   1536 S   0.0   0.0   0:00.20 sh
+     35 root      20   0   12016   2708   1664 S   0.0   0.0   0:00.00 sshd
+     58 root      20   0 1968036  76176  51200 S   0.0   0.9   0:00.26 dockerd
+     73 root      20   0 1801440  47348  32384 S   0.0   0.6   0:00.26 contain+
+    376 codespa+  20   0    2800   1664   1664 S   0.0   0.0   0:00.01 sh
+    400 root      20   0    2800   1664   1664 S   0.0   0.0   0:00.00 sh
+    597 codespa+  20   0    2808   1792   1792 S   0.0   0.0   0:00.00 sh
+    606 codespa+  20   0   11.3g 112280  52224 S   0.0   1.4   0:04.87 node
+    628 codespa+  20   0   52.5g 803728  63360 S   0.0   9.9   0:30.49 node
+    635 codespa+  20   0 1263184  60560  47872 S   0.0   0.7   0:00.31 node
+   1039 codespa+  20   0 1068392  80684  48000 S   0.0   1.0   0:02.06 node
+   1050 codespa+  20   0   16580  12928   3712 S   0.0   0.2   0:00.20 bash
+   4230 codespa+  20   0 1018360  61268  45440 S   0.0   0.8   0:00.17 node
+   8970 codespa+  20   0    7744   3456   3200 S   0.0   0.0   0:00.00 bash
+   8971 codespa+  20   0    7872   3584   3200 S   0.0   0.0   0:00.00 bash
+   9018 codespa+  20   0    6112   1792   1792 S   0.0   0.0   0:00.00 sleep
+   9019 codespa+  20   0   12364   5504   3456 R   0.0   0.1   0:00.00 top 
+
+
+CPU Usages check completed 
+
+#==============================================================================================# 
+
+

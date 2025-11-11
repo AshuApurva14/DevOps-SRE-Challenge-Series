@@ -5,6 +5,16 @@
 
     # System Health Check script 
 
+    # Directory and per-run report file (timestamped)
+    SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+    REPORT_DIR="$SCRIPT_DIR/reports"
+    mkdir -p "$REPORT_DIR"
+    REPORT_FILE="$REPORT_DIR/report-$(date '+%Y%m%d_%H%M%S').txt"
+    # create/clear the report file for this run
+    : > "$REPORT_FILE"
+    # update a stable symlink to the latest report (full path)
+    ln -sf "$REPORT_FILE" "$REPORT_DIR/latest-report.txt"
+
     #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
     # Check Disk Usage
@@ -13,9 +23,13 @@
         
         disk_usage_status=$(df -h)
 
-        echo "$disk_usage_status" >> report.txt
+    echo -e "\n #==================================== Disk usage Status ===================================# \n\n" >> "$REPORT_FILE"
 
-        echo -e "#===================== Current status of Disk usage ======================# \n\n$disk_usage_status \n\n"
+    echo -e "$disk_usage_status \n\n" >> "$REPORT_FILE"
+
+    echo -e "Disk usages check completed \n" >>  "$REPORT_FILE"
+
+    echo -e "#=============================================================================================# \n\n" >> "$REPORT_FILE"
         
     }
 
@@ -27,9 +41,15 @@
 
         check_process=$(systemctl list-units --type=service --state=running )
 
-        echo "$check_process" >> report.txt
 
-        echo -e "#====================== Current running process =======================# \n\n $check_process \n\n "
+    echo -e "\n #=============================== Running Services Status ==================================# \n\n " >> "$REPORT_FILE"
+
+    echo -e "$check_process \n\n" >> "$REPORT_FILE"
+
+    echo -e "Monitor Running Services check completed \n" >> "$REPORT_FILE" 
+
+    echo -e "#=============================================================================================# \n\n" >> "$REPORT_FILE"
+
     }
 
 
@@ -41,12 +61,12 @@
        
         memory_status=$(free -h)
         
-        echo "-------------Memeory Usage Status-----------" >> report.txt
-        echo "$memory_status \n\n" >> report.txt
+    echo -e "\n #================================== Memeory Usage Status ===================================# \n\n " >> "$REPORT_FILE"
+    echo -e "$memory_status \n\n" >> "$REPORT_FILE"
+    echo -e "Memory Usages check completed \n" >> "$REPORT_FILE"
 
-        
+    echo -e "#===============================================================================================# \n\n" >> "$REPORT_FILE"
 
-        echo -e "#=============================== Current memory status ==========================# \n\n $memory_status \n\n "
 
     }
 
@@ -59,17 +79,21 @@
 
         cpu_status=$(top -bn1 )
 
-        echo -e "\n\n #============================= Current status of CPU =============================# \n\n " >> report.txt
+    echo -e "\n #=================================== CPU usage Status ======================================# \n\n " >> "$REPORT_FILE"
 
-        echo -e "$cpu_status \n\n" >> report.txt
+    echo -e "$cpu_status \n\n" >> "$REPORT_FILE"
         
-        echo "CPU Usages check completed" >> report.txt
+    echo -e "CPU Usages check completed \n" >> "$REPORT_FILE"
+
+    echo -e "#==============================================================================================# \n\n" >> "$REPORT_FILE"
         
     }
 
     function exit() {
 
            exit
+
+         
     }
 
     #------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -84,11 +108,11 @@
 
         SENDER="devopssre5@gmail.com"
         RECEIVER="aapurva74@gmail.com"
-        APP_PASSWORD="crht xoag efdt feib" # Use a Google App Password, not your account password
+        APP_PASSWORD="Your password" # Use a Google App Password, not your account password
         CURRENT_DATE_TIME=$(date "+%Y-%m-%d %H:%M:%S")
         SUBJECT="System Health Report - $CURRENT_DATE_TIME"
         BODY="Please find the latest System Health Report file attached."
-        ATTACHMENT="/workspaces/DevOps-SRE-Challenge-Series/DevOps_SRE_Challenge_Season_2/Day_1/report.txt"
+    ATTACHMENT="$REPORT_FILE"
 
         python3 - <<PY
 import smtplib
