@@ -1,0 +1,67 @@
+
+ #==================================== Disk usage Status ===================================# 
+
+
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   12G   19G  38% /
+tmpfs            64M     0   64M   0% /dev
+shm              64M     0   64M   0% /dev/shm
+/dev/root        29G   21G  8.0G  73% /vscode
+/dev/sdb1        44G  1.8G   40G   5% /tmp
+/dev/loop4       32G   12G   19G  38% /workspaces 
+
+
+Disk usages check completed 
+
+#=============================================================================================# 
+
+
+
+ #================================== Memeory Usage Status ===================================# 
+
+ 
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       2.3Gi       172Mi        62Mi       5.7Gi       5.5Gi
+Swap:             0B          0B          0B 
+
+
+Memory Usages check completed 
+
+#===============================================================================================# 
+
+
+
+ #=================================== CPU usage Status ======================================# 
+
+ 
+top - 02:21:15 up  1:16,  0 user,  load average: 0.06, 0.15, 0.22
+Tasks:  17 total,   1 running,  16 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  5.0 us,  0.0 sy,  0.0 ni, 95.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7944.7 total,    171.8 free,   2350.7 used,   5799.8 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   5594.0 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 codespa+  20   0    1136    640    640 S   0.0   0.0   0:00.08 docker-+
+      7 codespa+  20   0    2800   1536   1536 S   0.0   0.0   0:00.62 sh
+     35 root      20   0   12016   2964   1920 S   0.0   0.0   0:00.00 sshd
+     58 root      20   0 1968292  73784  50688 S   0.0   0.9   0:00.41 dockerd
+     73 root      20   0 1801440  47940  33024 S   0.0   0.6   0:00.40 contain+
+    374 codespa+  20   0    2800   1664   1664 S   0.0   0.0   0:00.00 sh
+    403 root      20   0    2800   1792   1792 S   0.0   0.0   0:00.00 sh
+    602 codespa+  20   0    2808   1792   1792 S   0.0   0.0   0:00.00 sh
+    611 codespa+  20   0   11.3g 160540  53888 S   0.0   2.0   0:12.06 node
+    633 codespa+  20   0   62.6g 907736  64128 S   0.0  11.2   1:14.49 node
+    646 codespa+  20   0 1263872  61928  48640 S   0.0   0.8   0:00.49 node
+   1015 codespa+  20   0 1033348  85444  46848 S   0.0   1.1   0:04.99 node
+   1068 codespa+  20   0 1139792  78460  48768 S   0.0   1.0   0:02.55 node
+   1606 codespa+  20   0   16584  12800   3584 S   0.0   0.2   0:00.16 bash
+  22040 codespa+  20   0    7876   3456   3200 S   0.0   0.0   0:00.00 bash
+  22195 codespa+  20   0    6112   1792   1792 S   0.0   0.0   0:00.00 sleep
+  22201 codespa+  20   0   12364   5376   3328 R   0.0   0.1   0:00.00 top 
+
+
+CPU Usages check completed 
+
+#==============================================================================================# 
+
+

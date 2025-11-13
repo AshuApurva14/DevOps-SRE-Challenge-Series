@@ -34,3 +34,51 @@ While solving this challenge, I come across some issues and problems.I have fixe
 
    
      - Also, I have to ensure that email body must have the report file attached and it should received by the receiver in the same exact format.
+
+
+
+
+
+     Linkedin post
+     -------------
+
+
+     Can you build a System Health Check tool that can help you save a lot of time? Let's build it with me.
+
+Hello Folks, I am back again with a new DevOps SRE Challenge Season 1 Series. 
+
+Excited to share my learning journey through this challenge series.
+
+What is new in this series? What skills will you gain? 
+
+This new series will help you with hands-on challenges designed to enhance your DevOps and Site Reliability Engineering skills through practical, real-world scenarios.
+
+The Day 1 Challenge is to build a Menu based system health check script to check system health and send a comprehensive report at scheduled time.
+
+
+So, what I learned from the day 1 challenge?
+
+- Understand `Fucntions in linux` and utilized it to create a `reusable functionality`(such as Evalute CPU usages, Monitor Running Services, Assess Disk usages, Assess Memory Usages, Send a Comprehensive report via email )
+
+- Utilized the power of `while loop` and `case statement` to reuse the above functionality repeatedly.
+
+- Utilized linux builtin command such  `echo` and linux operator to Collect and represent system health data in good format.
+
+- Utilized the power of `Linux Crontab' for task scheduling and automating the whole process.
+
+- Used SMTP protocol to send an email at schedule time.
+
+
+Key Challenges and Solutions:
+
+- Ensuring the format of system health check report must be well formatted and represented.
+
+- Faced issues on email notification, for this I have utlized gmail smtp service.
+
+You can find my learnings here: [https://lnkd.in/gvgnfqUN]
+
+Thanks @   for this awesome challenge.
+
+
+
+
