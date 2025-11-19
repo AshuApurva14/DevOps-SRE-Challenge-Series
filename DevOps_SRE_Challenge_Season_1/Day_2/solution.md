@@ -12,7 +12,7 @@ This solution analyzes S3 bucket metadata provided as JSON, identifies stale or 
 ## Key learnings (what I learned)
 - JSON handling: parsing nested JSON and iterating records to access fields like `tags` and `policies`.
 - Date math: using `datetime.strptime` and computing days-since-last-access to detect staleness.
-- Rule-based filtering: expressing operational rules (e.g., size > 100GB and unused > 20 days) to produce deletion/archive lists.
+- Rule-based filtering: expressing operational rules (e.g., size > 100GB and unused > 90 days) to produce deletion/archive lists.
 - Cost modeling: implementing per-GB cost calculations and aggregating totals by region/team for chargeback insights.
 - Modular scripting: organizing logic into small, testable functions (`load_buckets`, `generate_cost_report`, etc.).
 
@@ -33,4 +33,8 @@ Run with the repository's copy of `bucket.json`:
 python DevOps_SRE_Challenge_Season_1/Day_2/bucket_analysis.py
 ```
 
+# Linkedin post 
 
+How would you analyze and optimize AWS S3 bucket costs using metadata such as size, region, versioning, and last access date?
+
+This is one of 
