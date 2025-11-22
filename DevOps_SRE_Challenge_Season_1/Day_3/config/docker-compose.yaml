@@ -1,0 +1,16 @@
+services:
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+
+  jenkins:
+    image: jenkins/jenkins:jdk17
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+
+  
