@@ -140,52 +140,62 @@ docker logs -f jenkins
 Create file `.\proxy\conf.d\reverse.conf` with the following content:
 
 ```
-# Redirect HTTP to HTTPS
+limit_req_zone $binary_remote_addr zone=req_limit_zone:10m rate=5r/s;
+
+
 server {
     listen 80;
+
     server_name grafana.local jenkins.local;
     return 301 https://$host$request_uri;
+
 }
 
-# Grafana HTTPS
+
+# Grafana HHTPS server Block
 server {
-    listen 443 ssl;
+    listen 443 ssl http2;
     server_name grafana.local;
 
-    ssl_certificate /etc/nginx/certs/local.crt;
-    ssl_certificate_key /etc/nginx/certs/local.key;
+     # Add baisc auth here
+    auth_basic "Restricted Grafana Access";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+
+    ssl_certificate /etc/nginx/certs/local-proxy.crt;
+    ssl_certificate_key /etc/nginx/certs/local-proxy.key;
     ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_prefer_server_ciphers on;
 
     location / {
-        auth_basic "Restricted";
-        auth_basic_user_file /etc/nginx/auth/htpasswd;
-        proxy_pass http://host.docker.internal:3000;
+        proxy_pass http://grafana:3000/;
         proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        # ... other headers ...
     }
 }
 
-# Jenkins HTTPS
+
+# Jenkins HTTPS Server Block
 server {
-    listen 443 ssl;
+    listen 443 ssl http2;
     server_name jenkins.local;
 
-    ssl_certificate /etc/nginx/certs/local.crt;
-    ssl_certificate_key /etc/nginx/certs/local.key;
+     # Add basic auth here
+    auth_basic "Restricted Jenkins Access";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+
+    ssl_certificate /etc/nginx/certs/local-proxy.crt;
+    ssl_certificate_key /etc/nginx/certs/local-proxy.key;
     ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_prefer_server_ciphers on;
 
     location / {
-        auth_basic "Restricted";
-        auth_basic_user_file /etc/nginx/auth/htpasswd;
-        proxy_pass http://host.docker.internal:8080;
+        limit_req zone=req_limit_zone burst=10 nodelay;
+        
+        proxy_pass http://jenkins:8080/;
         proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        # ... other headers ...
+
+        # *** THIS IS THE CRITICAL LINE TO ADD ***
+        proxy_set_header Authorization "";
+
     }
 }
 ```
