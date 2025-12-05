@@ -140,62 +140,52 @@ docker logs -f jenkins
 Create file `.\proxy\conf.d\reverse.conf` with the following content:
 
 ```
-limit_req_zone $binary_remote_addr zone=req_limit_zone:10m rate=5r/s;
-
-
+# Redirect HTTP to HTTPS
 server {
     listen 80;
-
     server_name grafana.local jenkins.local;
     return 301 https://$host$request_uri;
-
 }
 
-
-# Grafana HHTPS server Block
+# Grafana HTTPS
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
     server_name grafana.local;
 
-     # Add baisc auth here
-    auth_basic "Restricted Grafana Access";
-    auth_basic_user_file /etc/nginx/.htpasswd;
-
-    ssl_certificate /etc/nginx/certs/local-proxy.crt;
-    ssl_certificate_key /etc/nginx/certs/local-proxy.key;
+    ssl_certificate /etc/nginx/certs/local.crt;
+    ssl_certificate_key /etc/nginx/certs/local.key;
     ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
 
     location / {
-        proxy_pass http://grafana:3000/;
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/auth/htpasswd;
+        proxy_pass http://host.docker.internal:3000;
         proxy_set_header Host $host;
-        # ... other headers ...
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 
-
-# Jenkins HTTPS Server Block
+# Jenkins HTTPS
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
     server_name jenkins.local;
 
-     # Add basic auth here
-    auth_basic "Restricted Jenkins Access";
-    auth_basic_user_file /etc/nginx/.htpasswd;
-
-    ssl_certificate /etc/nginx/certs/local-proxy.crt;
-    ssl_certificate_key /etc/nginx/certs/local-proxy.key;
+    ssl_certificate /etc/nginx/certs/local.crt;
+    ssl_certificate_key /etc/nginx/certs/local.key;
     ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
 
     location / {
-        limit_req zone=req_limit_zone burst=10 nodelay;
-        
-        proxy_pass http://jenkins:8080/;
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/auth/htpasswd;
+        proxy_pass http://host.docker.internal:8080;
         proxy_set_header Host $host;
-        # ... other headers ...
-
-        # *** THIS IS THE CRITICAL LINE TO ADD ***
-        proxy_set_header Authorization "";
-
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```
